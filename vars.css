@@ -4,24 +4,27 @@
     --primary-text-color: #262626;
     --secondary-text-color: #606060;
     --light-grey-bg: #f8f8f8;
+    --very-light-bg: #fdfcfa;
     --dark-bg: #141414;
     --white: #ffffff;
-    --green-highlight: #0fabab; /* Цвет выделения, используется в компоненте timeline и других */
+    --green-highlight: #0fabab;
     --light-border: #eee;
     --dark-border: #000000;
-    --accent-gray: #d9d9d9; /* Цвет социальных иконок */
-    --placeholder-gray: #c8c8c8; /* Цвет заглушек изображений и фона секции Hero */
-    --customer-text-color: #909b99; /* Цвет текста "Customer" в отзывах */
+    --accent-gray: #d9d9d9;
+    --placeholder-gray: #c8c8c8;
+    --hero-bg: #c8c8c8;
+    --upload-area-bg: #f4f4f4;
+    --upload-highlight-bg: #e0fffb; /* New color for drag highlight */
+    --customer-text-color: #909b99;
+    --timeline-text-color: #bcbcbc;
+    --timeline-dot-bg: #535353;
+    --link-opacity: 0.6;
 
-    /* Fonts (примеры, если вы хотите использовать конкретные шрифты) */
-    /* Предполагается, что эти шрифты будут подключены через @import или <link> в HTML */
+    /* Fonts */
     --font-poppins: "Poppins", sans-serif;
     --font-inter: "Inter", sans-serif;
     --font-open-sans: "Open Sans", sans-serif;
 
     /* Effects */
-    /* Здесь можно добавить переменные для теней, переходов и т.д., если они есть в дизайне */
-    --shadow-light: 0 2px 5px rgba(0,0,0,0.05);
+    --shadow-light: 0 4px 15px rgba(0,0,0,0.05);
 }
-
-/* Figma Color Variables of your File */
