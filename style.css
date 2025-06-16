@@ -23,10 +23,11 @@ body {
     background: var(--white);
     min-width: 320px;
 }
+/* Изменено: Убрана максимальная ширина и автоматические отступы для контейнера */
 .container {
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 0 20px;
+    max-width: 100%; /* Занимает всю доступную ширину */
+    margin: 0; /* Убраны автоматические отступы */
+    padding: 0 20px; /* Сохраняем внутренние отступы, чтобы контент не прилипал к краям */
 }
 
 /* Кнопки */
@@ -43,7 +44,7 @@ body {
 .button.secondary:hover { background: var(--dark-bg); color: var(--white); }
 
 /* Header */
-.main-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; position: relative; z-index: 10; }
+.main-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 20px; position: relative; z-index: 10; } /* Установлены padding: 20px 20px; */
 .main-header .logo { display: flex; align-items: center; gap: 12px; }
 .main-header .logo .nav-link { color: var(--primary-text-color); font-family: var(--font-open-sans); font-weight: 700; font-size: 40px; white-space: nowrap; }
 .main-header .logo .your-logo-here { width: 70px; height: 70px; object-fit: cover; }
@@ -57,7 +58,7 @@ body {
 .main-nav-overlay { display: none; }
 
 /* Hero Section */
-.hero-section { padding: 80px 0; background: var(--hero-bg); min-height: 580px; display: flex; align-items: center; }
+.hero-section { padding: 80px 20px; background: var(--hero-bg); min-height: 580px; display: flex; align-items: center; } /* Установлен padding: 80px 20px; */
 .hero-content { max-width: 800px; display: flex; flex-direction: column; gap: 24px; }
 .hero-content h1 { color: var(--primary-text-color); font-family: var(--font-poppins); font-weight: 600; font-size: 50px; line-height: 1.4; }
 .hero-content p { color: var(--secondary-text-color); font-family: var(--font-open-sans); font-weight: 400; font-size: 20px; }
@@ -65,13 +66,13 @@ body {
 .hero-buttons .button { width: 350px; height: 60px; }
 
 /* Featured In Section */
-.featured-in-section { padding: 80px 0; text-align: center; }
+.featured-in-section { padding: 80px 20px; text-align: center; } /* Установлен padding: 80px 20px; */
 .featured-in-section h2 { color: var(--primary-text-color); font-family: var(--font-poppins); font-weight: 600; font-size: 36px; margin-bottom: 60px; }
 .logos-grp { display: flex; flex-wrap: wrap; justify-content: center; gap: 70px; opacity: 0.9; align-items: center; }
 .logos-grp img { width: 208px; height: 61px; object-fit: contain; }
 
 /* Problem Statement Section */
-.problem-statement { padding: 80px 0; background: var(--light-grey-bg); text-align: center; }
+.problem-statement { padding: 80px 20px; background: var(--light-grey-bg); text-align: center; } /* Установлен padding: 80px 20px; */
 .problem-statement h2 { color: var(--primary-text-color); font-family: var(--font-poppins); font-weight: 600; font-size: 40px; margin-bottom: 60px; }
 .problem-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 40px; }
 .stat-item { background: var(--very-light-bg); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; min-height: 204px; }
@@ -80,7 +81,7 @@ body {
 .problem-statement h3 { color: var(--primary-text-color); font-family: var(--font-poppins); font-weight: 600; font-size: 32px; }
 
 /* Upload Promo Section */
-.upload-promo-section { padding: 80px 0; display: flex; gap: 30px; align-items: flex-start; }
+.upload-promo-section { padding: 80px 20px; display: flex; gap: 30px; align-items: flex-start; } /* Установлен padding: 80px 20px; */
 .promo-text { flex: 1; }
 .promo-text h2 { font-family: var(--font-poppins); font-size: 40px; font-weight: 600; line-height: 1.4; text-align: center; margin-bottom: 10px; }
 .promo-text .subtitle { font-family: var(--font-open-sans); font-size: 24px; color: var(--secondary-text-color); text-align: center; margin-bottom: 40px; }
@@ -99,7 +100,7 @@ body {
 
 
 /* Features Overview Section */
-.features-overview { padding: 80px 0; text-align: center; }
+.features-overview { padding: 80px 20px; text-align: center; } /* Установлен padding: 80px 20px; */
 .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 60px; }
 .info-block { background: var(--very-light-bg); min-height: 433px; display: flex; flex-direction: column; }
 .info-block img { background: var(--placeholder-gray); width: 100%; height: 234px; object-fit: cover; }
@@ -107,12 +108,12 @@ body {
 .large-cta-button { width: 551px; height: 60px; margin: 0 auto; }
 
 /* Benefits Section */
-.benefits-section { padding: 80px 0; background: var(--light-grey-bg); display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+.benefits-section { padding: 80px 20px; background: var(--light-grey-bg); display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; } /* Установлен padding: 80px 20px; */
 .benefit-item { background: var(--very-light-bg); min-height: 146px; display: flex; align-items: center; padding: 20px 40px; }
 .benefit-item p { font-family: var(--font-poppins); font-size: 32px; font-weight: 500; line-height: 1.5; }
 
 /* Product Roadmap Section */
-.product-roadmap { padding: 80px 0; background: var(--light-grey-bg); text-align: center; }
+.product-roadmap { padding: 80px 20px; background: var(--light-grey-bg); text-align: center; } /* Установлен padding: 80px 20px; */
 .product-roadmap h2 { font-family: var(--font-poppins); font-size: 40px; font-weight: 600; margin-bottom: 80px; }
 .timeline-wrapper { position: relative; width: 100%; padding-bottom: 50px; }
 .timeline-background { position: absolute; top: 50%; left: 0; width: 100%; height: 55px; transform: translateY(-50%); z-index: 0; object-fit: cover; }
@@ -123,7 +124,7 @@ body {
 .timeline-item p { font-family: var(--font-inter); font-size: 32px; font-weight: 400; color: var(--timeline-text-color); text-align: left; width: 100%; line-height: 1.2; }
 
 /* Testimonials Section */
-.testimonials-section { padding: 80px 0; text-align: center; }
+.testimonials-section { padding: 80px 20px; text-align: center; } /* Установлен padding: 80px 20px; */
 .testimonials-section h2 { font-family: var(--font-poppins); font-size: 40px; font-weight: 600; margin-bottom: 60px; }
 .testimonial-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
 .testimonial-item { background: var(--light-grey-bg); padding: 30px; display: flex; flex-direction: column; gap: 20px; }
@@ -135,7 +136,7 @@ body {
 .role { font-family: var(--font-open-sans); font-size: 14px; color: var(--customer-text-color); }
 
 /* FAQ Section */
-.faq-section-wrapper { padding: 80px 0; background: var(--light-grey-bg); }
+.faq-section-wrapper { padding: 80px 20px; background: var(--light-grey-bg); } /* Установлен padding: 80px 20px; */
 .faq-container { display: flex; gap: 30px; align-items: flex-start; }
 .faq-image-placeholder { flex: 1; background: var(--accent-gray); min-height: 466px; display: flex; align-items: center; justify-content: center; }
 .faq-image-placeholder img { width: 100%; height: 100%; object-fit: cover; }
@@ -151,7 +152,7 @@ body {
 
 
 /* Call to Action Section */
-.cta-section { padding: 80px 0; text-align: center; }
+.cta-section { padding: 80px 20px; text-align: center; } /* Установлен padding: 80px 20px; */
 .cta-content { background: var(--dark-bg); padding: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
 .cta-content h2 { font-family: var(--font-poppins); font-size: 40px; font-weight: 600; color: var(--white); }
 .cta-content p { font-family: var(--font-open-sans); font-size: 20px; color: var(--white); opacity: 0.8; }
@@ -159,7 +160,7 @@ body {
 .cta-button:hover { background: var(--dark-bg); border-color: var(--green-highlight); color: var(--green-highlight); }
 
 /* Footer */
-.main-footer { background: var(--dark-bg); color: var(--white); padding: 60px 0; }
+.main-footer { background: var(--dark-bg); color: var(--white); padding: 60px 20px; } /* Установлен padding: 60px 20px; */
 .footer-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
 .footer-logo-info { display: flex; flex-direction: column; gap: 20px; }
 .footer-logo-info img { width: 70px; height: 70px; object-fit: cover; }
@@ -303,7 +304,7 @@ body {
 }
 
 @media (max-width: 768px) {
-    .main-header { padding: 15px 0; }
+    .main-header { padding: 15px 20px; } /* Установлен padding: 15px 20px; */
     .main-nav {
         position: fixed;
         top: 0;
@@ -332,7 +333,7 @@ body {
     .main-nav a { font-size: 20px; }
     .menu-toggle { display: block; margin-left: 20px; }
     .main-header .scan-cv-btn { display: none; } /* Скрываем кнопку в мобильном меню */
-    .hero-section { padding: 50px 0; min-height: auto; }
+    .hero-section { padding: 50px 20px; min-height: auto; } /* Установлен padding: 50px 20px; */
     .hero-content h1 { font-size: 36px; text-align: center; }
     .hero-content p { font-size: 18px; text-align: center; }
     .hero-buttons { justify-content: center; flex-direction: column; align-items: center; }
@@ -341,33 +342,32 @@ body {
     .logos-grp { gap: 30px; }
     .logos-grp img { width: 150px; height: 45px; }
     .problem-statement h2 { font-size: 30px; margin-bottom: 40px; }
-    .problem-stats { grid-template-columns: 1fr; }
     .problem-statement h3 { font-size: 26px; }
-    .upload-promo-section { padding: 50px 0; }
+    .upload-promo-section { padding: 50px 20px; } /* Установлен padding: 50px 20px; */
     .promo-text h2 { font-size: 30px; }
     .promo-text .subtitle { font-size: 18px; }
     .promo-text h3 { font-size: 26px; margin-bottom: 20px; }
     .benefit-item-list p { font-size: 18px; }
     .upload-area p { font-size: 24px; }
     .upload-area .small-text { font-size: 18px; }
-    .features-overview { padding: 50px 0; }
+    .features-overview { padding: 50px 20px; } /* Установлен padding: 50px 20px; */
     .features-grid { grid-template-columns: 1fr; margin-bottom: 40px; }
-    .benefits-section { padding: 50px 0; }
+    .benefits-section { padding: 50px 20px; } /* Установлен padding: 50px 20px; */
     .benefit-item p { font-size: 24px; }
-    .product-roadmap { padding: 50px 0; }
+    .product-roadmap { padding: 50px 20px; } /* Установлен padding: 50px 20px; */
     .product-roadmap h2 { font-size: 30px; margin-bottom: 60px; }
     .timeline { flex-direction: column; align-items: center; }
     .timeline-item { width: 100%; max-width: 250px; margin-bottom: 30px; }
     .timeline-item .circle { width: 50px; height: 50px; border-width: 18px; }
     .timeline-background { display: none; } /* Скрываем волну на мобильных */
-    .testimonials-section { padding: 50px 0; }
+    .testimonials-section { padding: 50px 20px; } /* Установлен padding: 50px 20px; */
     .testimonials-section h2 { font-size: 30px; margin-bottom: 40px; }
     .testimonial-item { padding: 20px; }
-    .faq-section-wrapper { padding: 50px 0; }
+    .faq-section-wrapper { padding: 50px 20px; } /* Установлен padding: 50px 20px; */
     .faq-content h2 { font-size: 26px; margin-bottom: 20px; }
     .faq-question { font-size: 15px; }
     .faq-answer p { font-size: 13px; }
-    .cta-section { padding: 50px 0; }
+    .cta-section { padding: 50px 20px; } /* Установлен padding: 50px 20px; */
     .cta-content h2 { font-size: 30px; }
     .cta-content p { font-size: 18px; }
     .cta-button { width: 100%; max-width: 300px; }
