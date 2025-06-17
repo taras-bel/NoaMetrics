@@ -215,6 +215,19 @@ body {
     display: none; /* Скрываем фоновое изображение */
 }
 
+.timeline {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between; /* Распределяет элементы равномерно */
+    align-items: flex-start;
+    width: 100%; /* Занимает всю доступную ширину */
+    max-width: 1200px; /* Ограничиваем ширину для лучшего вида */
+    margin: 0 auto; /* Центрируем */
+    padding: 0 20px; /* Внутренние отступы */
+}
+
+/* Линия таймлайна */
 .timeline:before {
     content: '';
     position: absolute;
@@ -642,7 +655,62 @@ body {
 }
 
 /* Адаптивность */
-@media (max-width: 1024px) {
+
+/* Общие стили для планшетов и устройств с большими экранами, таких как Asus Zenbook Fold 17 в разложенном виде */
+@media (min-width: 1025px) and (max-width: 1920px) {
+    /* Например, для Asus Zenbook Fold 17 (2560x1920, но может быть 1920x1280 в сложенном виде) и Asus Zenbook 15 (Full HD, 2.8K, 3K, 4K) */
+    /* В основном, чтобы убедиться, что контент не растягивается слишком сильно */
+    .container {
+        max-width: 1440px; /* Ограничиваем максимальную ширину для комфортного чтения на очень широких экранах */
+        margin: 0 auto; /* Центрируем контейнер */
+        padding: 0 40px; /* Увеличиваем внутренние отступы */
+    }
+
+    .main-header { padding: 20px 40px; }
+    .hero-section { padding: 100px 40px; }
+    .hero-content h1 { font-size: 60px; } /* Чуть больше для больших экранов */
+    .hero-content p { font-size: 22px; }
+    .hero-buttons .button { width: 400px; height: 65px; font-size: 22px; }
+
+    .featured-in-section, .problem-statement, .upload-promo-section,
+    .features-overview, .benefits-section, .product-roadmap,
+    .testimonials-section, .faq-section-wrapper, .cta-section {
+        padding: 100px 40px; /* Увеличиваем отступы секций */
+    }
+
+    /* Roadmap специфичные изменения для больших планшетов и настольных устройств */
+    .timeline-wrapper {
+        display: flex; /* Показываем горизонтальный роадмап */
+    }
+    .mobile-roadmap-wrapper {
+        display: none; /* Скрываем мобильный роадмап */
+    }
+    .timeline {
+        max-width: 1440px; /* Увеличиваем максимальную ширину роадмапа */
+        padding: 0 40px;
+    }
+    .timeline-item h4 { font-size: 44px; } /* Чуть больше */
+    .timeline-item p { font-size: 28px; } /* Чуть больше */
+    .timeline-item .circle {
+        width: 75px; /* Больше кружки */
+        height: 75px;
+        border-width: 10px; /* Толще граница */
+    }
+
+    .problem-stats { grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .features-grid { grid-template-columns: repeat(4, 1fr); gap: 40px; }
+    .benefits-section { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+    .testimonial-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+    .faq-container { flex-direction: row; }
+    .cta-content { padding: 70px; }
+    .cta-content h2 { font-size: 48px; }
+    .cta-content p { font-size: 22px; }
+    .main-footer { padding: 80px 40px; }
+}
+
+
+/* Адаптация для планшетов (обычные разрешения планшетов: 768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
     .main-nav ul { gap: 30px; }
     .hero-content h1 { font-size: 44px; }
     .problem-statement h2 { font-size: 36px; }
@@ -657,38 +725,40 @@ body {
     .features-grid { grid-template-columns: repeat(2, 1fr); }
     .large-cta-button { width: 100%; max-width: 450px; }
     .benefits-section { grid-template-columns: 1fr; }
-    /* Скрываем горизонтальный роадмап на меньших экранах */
-    .timeline-wrapper { display: none; }
-    /* Показываем вертикальный роадмап */
-    .mobile-roadmap-wrapper { display: block; }
 
-    /* Эти стили для timeline-item теперь не будут использоваться на мобильных, но оставляю их на всякий случай, если будут конфликты */
-    .timeline-item { width: 150px; }
-    .timeline-item h4 { font-size: 32px; }
-    .timeline-item p { font-size: 24px; }
+    /* Здесь самое важное изменение для роадмапа:
+       На планшетах (от 769px до 1024px) мы можем попробовать использовать гибкий горизонтальный роадмап
+       или переключиться на мобильную версию, в зависимости от предпочтений.
+       Я предлагаю переключить на мобильную, чтобы избежать сжатия.
+    */
+    .timeline-wrapper { display: none; } /* Скрываем горизонтальный роадмап */
+    .mobile-roadmap-wrapper { display: block; } /* Показываем мобильный роадмап */
+
     .testimonial-grid { grid-template-columns: 1fr; }
     .faq-container { flex-direction: column; align-items: center; }
     .faq-image-placeholder, .faq-content { width: 100%; }
     .footer-container {
-        grid-template-columns: 1fr; /* Начинаем с одной колонки на средних экранах */
-        flex-direction: column; /* Элементы футера будут выстраиваться вертикально */
-        align-items: center; /* Центрируем по горизонтали */
+        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: center;
     }
     .footer-logo-info { text-align: center; }
     .footer-right {
-        margin-left: 0; /* Отменяем смещение вправо */
-        justify-content: center; /* Центрируем элементы в footer-right */
-        width: 100%; /* Занимает всю ширину */
+        margin-left: 0;
+        justify-content: center;
+        width: 100%;
     }
-    .footer-links-grid { grid-column: span 3; /* Занимаем всю ширину сетки */
+    .footer-links-grid {
         grid-template-columns: repeat(3, 1fr); /* 3 колонки для ссылок */
         width: 100%;
-        justify-items: center; /* Центрируем содержимое в колонках */
+        justify-items: center;
     }
     .footer-column { text-align: center; }
-    .social-links { margin-bottom: 20px; /* Отступ снизу */ order: -1; /* Возвращаем наверх */ } /* Для центрирования социальных иконок */
+    .social-links { margin-bottom: 20px; order: -1; }
 }
 
+
+/* Адаптация для мобильных устройств (смартфоны, до 768px) */
 @media (max-width: 768px) {
     .main-header { padding: 15px 20px; }
     .main-nav {
@@ -747,6 +817,8 @@ body {
     .product-roadmap { padding: 50px 20px; }
     .product-roadmap h2 { font-size: 30px; margin-bottom: 60px; }
     /* Mobile Roadmap adjustments */
+    .timeline-wrapper { display: none; } /* Скрываем горизонтальный роадмап */
+    .mobile-roadmap-wrapper { display: block; } /* Показываем мобильный роадмап */
     .mobile-roadmap-line { left: 20px; }
     .mobile-roadmap-point { left: 20px; }
     .mobile-roadmap-item { padding-left: 60px; }
