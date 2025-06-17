@@ -1,7 +1,35 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    
     // ===========================================
+    // ЗАГРУЗКА HEADER И FOOTER (ДОБАВЛЕННЫЙ БЛОК)
+    // ===========================================
+    const loadComponent = async (url, placeholderId) => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Ошибка загрузки ${url}: Статус ${response.status}`);
+            }
+            const data = await response.text();
+            const placeholder = document.getElementById(placeholderId);
+            if (placeholder) {
+                placeholder.innerHTML = data;
+            }
+        } catch (error) {
+            console.error(`Не удалось загрузить компонент: ${error}`);
+        }
+    };
+
+    // Ожидаем завершения загрузки хедера и футера перед выполнением остальных скриптов
+    await Promise.all([
+        loadComponent('header.html', 'header-placeholder'),
+        loadComponent('footer.html', 'footer-placeholder')
+    ]);
+
+    // ===========================================
+    // ВЕСЬ ОСТАЛЬНОЙ КОД, КОТОРЫЙ У ВАС УЖЕ БЫЛ
+    // ===========================================
+
     // Navigation Menu Toggle (Hamburger menu for mobile)
-    // ===========================================
     const menuToggle = document.querySelector('.menu-toggle');
     const mainNav = document.querySelector('.main-nav');
     const mainNavOverlay = document.querySelector('.main-nav-overlay');
@@ -10,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
         menuToggle.addEventListener('click', function() {
             mainNav.classList.toggle('active');
             mainNavOverlay.classList.toggle('active');
-            document.body.classList.toggle('no-scroll'); // Optional: disable body scroll when menu is open
+            document.body.classList.toggle('no-scroll');
         });
 
         mainNavOverlay.addEventListener('click', function() {
@@ -33,34 +61,31 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    // ===========================================
     // Smooth Scrolling for Navigation Links
-    // ===========================================
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
 
             const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
+            // Проверяем, что это не просто "#"
+            if (targetId.length > 1) {
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const headerOffset = document.querySelector('.main-header') ? document.querySelector('.main-header').offsetHeight : 0;
+                    const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - headerOffset;
 
-            if (targetElement) {
-                // Adjust scroll position for fixed header if needed
-                const headerOffset = document.querySelector('.main-header') ? document.querySelector('.main-header').offsetHeight : 0;
-                const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-                const offsetPosition = elementPosition - headerOffset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth"
-                });
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
             }
         });
     });
 
 
-    // ===========================================
     // Upload Area Drag & Drop and File Handling
-    // ===========================================
     const uploadArea = document.getElementById('uploadArea');
     const uploadButton = document.getElementById('uploadButton');
     const fileInput = document.getElementById('fileInput');
@@ -70,13 +95,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const uploadStatusText = document.querySelector('.upload-status-text');
 
     if (uploadArea && uploadButton && fileInput && fileList && uploadProgressBarContainer && uploadProgressBar && uploadStatusText) {
-        // Prevent default drag behaviors
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             uploadArea.addEventListener(eventName, preventDefaults, false);
-            document.body.addEventListener(eventName, preventDefaults, false); // Prevent drop outside
+            document.body.addEventListener(eventName, preventDefaults, false);
         });
 
-        // Highlight drop area when item is dragged over
         ['dragenter', 'dragover'].forEach(eventName => {
             uploadArea.addEventListener(eventName, () => uploadArea.classList.add('highlight'), false);
         });
@@ -85,13 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
             uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('highlight'), false);
         });
 
-        // Handle dropped files
         uploadArea.addEventListener('drop', handleDrop, false);
-
-        // Handle button click for file input
         uploadButton.addEventListener('click', () => fileInput.click());
-
-        // Handle file selection via input
         fileInput.addEventListener('change', (event) => {
             handleFiles(event.target.files);
         });
@@ -108,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function handleFiles(files) {
-            fileList.innerHTML = ''; // Clear previous list
+            fileList.innerHTML = '';
             if (files.length > 0) {
                 uploadProgressBarContainer.style.display = 'block';
                 uploadStatusText.style.display = 'block';
@@ -122,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     fileList.appendChild(listItem);
                 }
 
-                // Simulate upload progress
                 let progress = 0;
                 const interval = setInterval(() => {
                     progress += 10;
@@ -135,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             uploadProgressBarContainer.style.display = 'none';
                             uploadStatusText.style.display = 'none';
                             fileList.innerHTML = '';
-                        }, 2000); // Hide after 2 seconds
+                        }, 2000);
                     }
                 }, 200);
             }
@@ -143,9 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-    // ===========================================
     // Roadmap Dot Interaction (Desktop & Tablet)
-    // ===========================================
     const timelineItems = document.querySelectorAll('.timeline-item');
     timelineItems.forEach(item => {
         const circle = item.querySelector('.circle');
@@ -153,22 +168,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (circle && paragraph) {
             circle.addEventListener('click', function() {
-                // Remove 'active' from all items first
                 timelineItems.forEach(i => {
                     if (i !== item) {
                         i.classList.remove('active');
                     }
                 });
-                // Toggle 'active' on the clicked item
                 item.classList.toggle('active');
             });
         }
     });
 
 
-    // ===========================================
     // Mobile Roadmap Accordion
-    // ===========================================
     const mobileRoadmapItems = document.querySelectorAll('.mobile-roadmap-item');
     mobileRoadmapItems.forEach(item => {
         const header = item.querySelector('.mobile-roadmap-header');
@@ -176,31 +187,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (header && details) {
             header.addEventListener('click', function() {
-                // Toggle 'active' class on the clicked item
-                item.classList.toggle('active');
+                const isActive = item.classList.contains('active');
 
-                // Toggle max-height for smooth open/close animation
-                if (item.classList.contains('active')) {
-                    details.style.maxHeight = details.scrollHeight + "px";
-                } else {
-                    details.style.maxHeight = null;
-                }
-
-                // Close other open items
                 mobileRoadmapItems.forEach(otherItem => {
-                    if (otherItem !== item && otherItem.classList.contains('active')) {
-                        otherItem.classList.remove('active');
-                        otherItem.querySelector('.mobile-roadmap-details').style.maxHeight = null;
-                    }
+                    otherItem.classList.remove('active');
+                    otherItem.querySelector('.mobile-roadmap-details').style.maxHeight = null;
                 });
+                
+                if (!isActive) {
+                    item.classList.add('active');
+                    details.style.maxHeight = details.scrollHeight + "px";
+                }
             });
         }
     });
 
 
-    // ===========================================
     // FAQ Accordion
-    // ===========================================
     const faqItems = document.querySelectorAll('.faq-item');
     faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
@@ -208,42 +211,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (question && answer) {
             question.addEventListener('click', function() {
-                // Toggle 'active' class on the clicked FAQ item
-                item.classList.toggle('active');
-
-                // Toggle max-height for smooth open/close animation
-                if (item.classList.contains('active')) {
-                    answer.style.maxHeight = answer.scrollHeight + "px";
-                } else {
-                    answer.style.maxHeight = null;
-                }
-
-                // Optional: Close other open FAQ items
+                const isActive = item.classList.contains('active');
+                
                 faqItems.forEach(otherItem => {
-                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                    if (otherItem !== item) {
                         otherItem.classList.remove('active');
                         otherItem.querySelector('.faq-answer').style.maxHeight = null;
                     }
                 });
+                
+                if (!isActive) {
+                    item.classList.add('active');
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                } else {
+                    item.classList.remove('active');
+                    answer.style.maxHeight = null;
+                }
             });
         }
     });
 
 
-    // ===========================================
-    // Roadmap Line and Item Scroll Animation (NEW)
-    // ===========================================
+    // Roadmap Line and Item Scroll Animation
     const roadmapSection = document.querySelector('.product-roadmap');
     const desktopTimelineWrapper = document.querySelector('.timeline-wrapper');
     const mobileRoadmapWrapper = document.querySelector('.mobile-roadmap-wrapper');
 
     function checkRoadmapVisibility() {
-        if (!roadmapSection) return; // Exit if roadmap section doesn't exist
+        if (!roadmapSection) return;
 
-        const triggerBottom = window.innerHeight * 0.8; // Trigger when 80% of viewport is scrolled
-        const roadmapSectionTop = roadmapSection.getBoundingClientRect().top;
-
-        // Animate individual roadmap items (both desktop and mobile)
+        const triggerBottom = window.innerHeight * 0.8;
         const allRoadmapItems = document.querySelectorAll('.timeline-item, .mobile-roadmap-item');
         allRoadmapItems.forEach(item => {
             const itemTop = item.getBoundingClientRect().top;
@@ -252,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Activate line animation for desktop roadmap
         if (desktopTimelineWrapper) {
             const timelineTop = desktopTimelineWrapper.getBoundingClientRect().top;
             if (timelineTop < triggerBottom && !desktopTimelineWrapper.classList.contains('animated')) {
@@ -260,7 +256,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Activate line animation for mobile roadmap
         if (mobileRoadmapWrapper) {
             const mobileRoadmapTop = mobileRoadmapWrapper.getBoundingClientRect().top;
             if (mobileRoadmapTop < triggerBottom && !mobileRoadmapWrapper.classList.contains('animated')) {
@@ -268,31 +263,33 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-
-    // Initial check on load
+    
     checkRoadmapVisibility();
-
-    // Check on scroll
     window.addEventListener('scroll', checkRoadmapVisibility);
-    window.addEventListener('resize', checkRoadmapVisibility); // Recheck on resize
+    window.addEventListener('resize', checkRoadmapVisibility);
 
 
-    // ===========================================
     // Modal functionality
-    // ===========================================
-    const openModalBtn = document.getElementById('openModalBtn');
-    const modal = document.getElementById('myModal');
-    const closeModalBtn = document.querySelector('.close-button');
+    const modal = document.getElementById('betaFormModal');
+    const closeModalBtn = document.querySelector('.modal .close-button');
+    
+    // Используем делегирование событий для кнопок открытия модального окна, 
+    // так как они могут быть загружены динамически
+    document.body.addEventListener('click', function(event) {
+        if (event.target.matches('.open-beta-modal')) {
+            event.preventDefault();
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        }
+    });
 
-    if (openModalBtn && modal && closeModalBtn) {
-        openModalBtn.addEventListener('click', () => {
-            modal.style.display = 'flex';
-        });
-
-        closeModalBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
+    if (modal) {
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+        }
         window.addEventListener('click', (event) => {
             if (event.target === modal) {
                 modal.style.display = 'none';
@@ -300,4 +297,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-}); // End of DOMContentLoaded
+});
