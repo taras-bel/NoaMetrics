@@ -805,7 +805,39 @@ body {
     .container {
         padding: 0 30px;
     }
-    .main-nav ul { gap: 30px; }
+    .main-nav { /* Ensure main-nav is not fixed and behaves like desktop */
+        position: static;
+        right: auto;
+        width: auto;
+        height: auto;
+        background-color: transparent;
+        flex-direction: row; /* Ensure it's a row */
+        justify-content: flex-end; /* Align links to the right */
+        box-shadow: none;
+        padding-top: 0;
+        transition: none; /* Disable mobile transition */
+        z-index: auto;
+    }
+    .main-nav ul { /* Ensure the list is a row */
+        display: flex;
+        gap: 30px; /* Adjust gap for tablets */
+        align-items: center;
+        width: auto;
+        text-align: left;
+    }
+    .main-nav a { /* Ensure text size is consistent */
+        font-size: 16px;
+    }
+    .menu-toggle { /* Hide the hamburger menu for tablets */
+        display: none;
+    }
+    .main-nav-overlay { /* Hide the overlay */
+        display: none;
+    }
+    .main-header .scan-cv-btn { /* Make sure the scan button is visible */
+        display: inline-flex; /* or block */
+    }
+
     .hero-section { padding: 80px 30px; min-height: 400px; }
     .hero-content h1 { font-size: 48px; }
     .hero-content p { font-size: 20px; }
