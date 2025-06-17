@@ -81,6 +81,7 @@ body {
 .main-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 20px; position: relative; z-index: 10; }
 .main-header .logo { display: flex; align-items: center; gap: 12px; }
 .main-header .logo .nav-link { color: var(--primary-text-color); font-family: var(--font-open-sans); font-weight: 700; font-size: 40px; white-space: nowrap; }
+/* Добавлен стиль для логотипа в хедере, используем изображение из футера */
 .main-header .logo .your-logo-here { width: 70px; height: 70px; object-fit: cover; }
 .main-nav ul { display: flex; gap: 60px; align-items: center; }
 .main-nav a { color: var(--primary-text-color); font-family: var(--font-open-sans); font-weight: 600; font-size: 16px; transition: color 0.3s ease; }
@@ -504,11 +505,29 @@ body {
 
 /* Footer */
 .main-footer { background: var(--dark-bg); color: var(--white); padding: 60px 20px; }
-.footer-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
+.footer-container {
+    display: flex; /* Изменяем на flexbox */
+    justify-content: space-between; /* Распределяем элементы по краям */
+    align-items: center; /* Выравниваем по вертикали */
+    gap: 30px;
+}
 .footer-logo-info { display: flex; flex-direction: column; gap: 20px; }
+/* Используем тот же стиль, что и в хедере */
 .footer-logo-info img { width: 70px; height: 70px; object-fit: cover; }
 .footer-logo-info p { font-family: var(--font-open-sans); font-size: 14px; line-height: 1.6; opacity: 0.8; }
-.footer-links-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+
+/* Контейнер для ссылок и социальных иконок */
+.footer-right {
+    display: flex; /* Flexbox для выравнивания по горизонтали */
+    align-items: center; /* Выравнивание по вертикали */
+    gap: 30px; /* Отступ между группами */
+}
+
+.footer-links-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
 .footer-column h3 { font-family: var(--font-poppins); font-size: 18px; font-weight: 600; margin-bottom: 20px; }
 .footer-column ul { list-style: none; padding: 0; }
 .footer-column ul li { margin-bottom: 10px; }
@@ -529,242 +548,4 @@ body {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.6);
-    justify-content: center;
-    align-items: center;
-}
-.modal-content {
-    background-color: var(--white);
-    padding: 30px;
-    border-radius: 8px;
-    position: relative;
-    width: 90%;
-    max-width: 500px;
-    animation: fadeIn 0.3s ease-out;
-}
-.modal-content h2 {
-    font-family: var(--font-poppins);
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--primary-text-color);
-    margin-bottom: 25px;
-    text-align: center;
-}
-.modal-content .close-button {
-    color: var(--dark-bg);
-    font-size: 30px;
-    font-weight: bold;
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    cursor: pointer;
-}
-.modal-content .close-button:hover,
-.modal-content .close-button:focus {
-    color: var(--green-highlight);
-    text-decoration: none;
-}
-.form-group {
-    margin-bottom: 20px;
-}
-.form-group label {
-    display: block;
-    font-family: var(--font-open-sans);
-    font-size: 16px;
-    color: var(--primary-text-color);
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-.form-group input[type="text"],
-.form-group input[type="email"] {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--light-border);
-    border-radius: 4px;
-    font-family: var(--font-open-sans);
-    font-size: 16px;
-    color: var(--primary-text-color);
-    background-color: var(--very-light-bg);
-}
-.form-group input[type="text"]:focus,
-.form-group input[type="email"]:focus {
-    border-color: var(--green-highlight);
-    outline: none;
-}
-.checkbox-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 25px;
-}
-.checkbox-group input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    accent-color: var(--green-highlight);
-    cursor: pointer;
-}
-.checkbox-group label {
-    margin-bottom: 0;
-    font-weight: 400;
-    font-size: 15px;
-}
-.modal-content .button {
-    width: 100%;
-    padding: 15px;
-    font-size: 18px;
-    border-radius: 4px;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Адаптивность */
-@media (max-width: 1024px) {
-    .main-nav ul { gap: 30px; }
-    .hero-content h1 { font-size: 44px; }
-    .problem-statement h2 { font-size: 36px; }
-    .upload-promo-section { flex-direction: column; align-items: center; }
-    .promo-text, .upload-area { width: 100%; }
-    .promo-text h2 { font-size: 36px; }
-    .promo-text .subtitle { font-size: 20px; }
-    .promo-text h3 { font-size: 30px; }
-    .benefit-item-list p { font-size: 20px; }
-    .upload-area p { font-size: 30px; }
-    .upload-area .small-text { font-size: 20px; }
-    .features-grid { grid-template-columns: repeat(2, 1fr); }
-    .large-cta-button { width: 100%; max-width: 450px; }
-    .benefits-section { grid-template-columns: 1fr; }
-    /* Скрываем горизонтальный роадмап на меньших экранах */
-    .timeline-wrapper { display: none; }
-    /* Показываем вертикальный роадмап */
-    .mobile-roadmap-wrapper { display: block; }
-
-    /* Эти стили для timeline-item теперь не будут использоваться на мобильных, но оставляю их на всякий случай, если будут конфликты */
-    .timeline-item { width: 150px; }
-    .timeline-item h4 { font-size: 32px; }
-    .timeline-item p { font-size: 24px; }
-    .testimonial-grid { grid-template-columns: 1fr; }
-    .faq-container { flex-direction: column; align-items: center; }
-    .faq-image-placeholder, .faq-content { width: 100%; }
-    .footer-container { grid-template-columns: repeat(2, 1fr); }
-    .footer-links-grid { grid-column: span 2; }
-}
-
-@media (max-width: 768px) {
-    .main-header { padding: 15px 20px; }
-    .main-nav {
-        position: fixed;
-        top: 0;
-        right: -100%; /* Скрыто за экраном */
-        width: 70%;
-        height: 100%;
-        background-color: var(--white);
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 80px;
-        transition: right 0.3s ease-in-out;
-        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-        z-index: 20;
-    }
-    .main-nav.active {
-        right: 0;
-    }
-    .main-nav ul {
-        flex-direction: column;
-        gap: 30px;
-        width: 100%;
-        text-align: center;
-        padding: 0 20px;
-    }
-    .main-nav ul li { width: 100%; }
-    .main-nav a { font-size: 20px; }
-    .menu-toggle {
-        display: block;
-        margin-left: 20px;
-        color: var(--white); /* Устанавливаем белый цвет для бургер-меню на мобильных */
-    }
-    .main-header .scan-cv-btn { display: none; } /* Скрываем кнопку в мобильном меню */
-    .hero-section { padding: 50px 20px; min-height: auto; }
-    .hero-content h1 { font-size: 36px; text-align: center; }
-    .hero-content p { font-size: 18px; text-align: center; }
-    .hero-buttons { justify-content: center; flex-direction: column; align-items: center; }
-    .hero-buttons .button { width: 100%; max-width: 300px; }
-    .featured-in-section h2 { font-size: 30px; margin-bottom: 40px; }
-    .logos-grp { gap: 30px; }
-    .logos-grp img { width: 150px; height: 45px; }
-    .problem-statement h2 { font-size: 30px; margin-bottom: 40px; }
-    .problem-statement h3 { font-size: 26px; }
-    .upload-promo-section { padding: 50px 20px; }
-    .promo-text h2 { font-size: 30px; }
-    .promo-text .subtitle { font-size: 18px; }
-    .promo-text h3 { font-size: 26px; margin-bottom: 20px; }
-    .benefit-item-list p { font-size: 18px; }
-    .upload-area p { font-size: 24px; }
-    .upload-area .small-text { font-size: 18px; }
-    .features-overview { padding: 50px 20px; }
-    .features-grid { grid-template-columns: 1fr; margin-bottom: 40px; }
-    .benefits-section { padding: 50px 20px; }
-    .benefit-item p { font-size: 24px; }
-    .product-roadmap { padding: 50px 20px; }
-    .product-roadmap h2 { font-size: 30px; margin-bottom: 60px; }
-    /* Mobile Roadmap adjustments */
-    .mobile-roadmap-line { left: 20px; }
-    .mobile-roadmap-point { left: 20px; }
-    .mobile-roadmap-item { padding-left: 60px; }
-    .mobile-roadmap-header h4 { font-size: 24px; }
-    .mobile-roadmap-details p { font-size: 14px; }
-
-    .testimonials-section { padding: 50px 20px; }
-    .testimonials-section h2 { font-size: 30px; margin-bottom: 40px; }
-    .testimonial-item { padding: 20px; }
-    .faq-section-wrapper { padding: 50px 20px; }
-    .faq-content h2 { font-size: 26px; margin-bottom: 20px; }
-    .faq-question { font-size: 15px; }
-    .faq-answer p { font-size: 13px; }
-    .cta-section { padding: 50px 20px; }
-    .cta-content h2 { font-size: 30px; }
-    .cta-content p { font-size: 18px; }
-    .cta-button { width: 100%; max-width: 300px; }
-    .footer-container { grid-template-columns: 1fr; text-align: center; }
-    .footer-logo-info { align-items: center; }
-    .footer-links-grid { grid-template-columns: 1fr; }
-    .footer-column { margin-bottom: 20px; }
-    .social-links ul { justify-content: center; }
-
-    .main-nav-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 15;
-        display: none;
-    }
-    .main-nav.active + .main-nav-overlay {
-        display: block;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-content h1 { font-size: 30px; }
-    .hero-content p { font-size: 16px; }
-    .featured-in-section h2 { font-size: 24px; }
-    .logos-grp img { width: 120px; height: 35px; }
-    .problem-statement h2 { font-size: 24px; }
-    .problem-statement h3 { font-size: 22px; }
-    .upload-area p { font-size: 20px; }
-    .upload-area .small-text { font-size: 16px; }
-    .info-block p { font-size: 20px; }
-    .benefit-item p { font-size: 20px; }
-    .product-roadmap h2 { font-size: 24px; }
-    .mobile-roadmap-header h4 { font-size: 20px; } /* Уменьшаем размер шрифта для мобильного роадмапа */
-    .mobile-roadmap-details p { font-size: 12px; } /* Уменьшаем размер шрифта для деталей */
-    .testimonials-section h2 { font-size: 24px; }
-    .cta-content h2 { font-size: 24px; }
-    .cta-content p { font-size: 16px; }
-    .cta-button { width: 100%; max-width: 300px; }
-    .modal-content h2 { font-size: 24px; }
-}
+    background-
