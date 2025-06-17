@@ -280,13 +280,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===========================================
     // Modal functionality
     // ===========================================
-    const openModalBtn = document.getElementById('openModalBtn');
-    const modal = document.getElementById('myModal');
-    const closeModalBtn = document.querySelector('.close-button');
+    // Use .open-beta-modal class for buttons that open the modal
+    const openModalButtons = document.querySelectorAll('.open-beta-modal');
+    const modal = document.getElementById('betaFormModal'); // Corrected ID here
+    const closeModalBtn = document.querySelector('.modal .close-button'); // Ensure it targets the close button within the modal
 
-    if (openModalBtn && modal && closeModalBtn) {
-        openModalBtn.addEventListener('click', () => {
-            modal.style.display = 'flex';
+    if (openModalButtons.length > 0 && modal && closeModalBtn) {
+        openModalButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent default link behavior
+                modal.style.display = 'flex';
+            });
         });
 
         closeModalBtn.addEventListener('click', () => {
