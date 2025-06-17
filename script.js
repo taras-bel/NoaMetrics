@@ -1,313 +1,104 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
+    // ===========================================
+    // Navigation Menu Toggle (Hamburger menu for mobile)
+    // ===========================================
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mainNav = document.querySelector('.main-nav');
+    const mainNavOverlay = document.querySelector('.main-nav-overlay');
 
-    // Функция для загрузки HTML из файла в placeholder
-    async function loadTemplate(placeholderId, templatePath) {
-        const placeholder = document.getElementById(placeholderId);
-        if (placeholder) {
-            try {
-                const response = await fetch(templatePath);
-                if (!response.ok) {
-                    // Если запрос не успешен (например, 404 Not Found)
-                    console.error(`Ошибка HTTP при загрузке шаблона ${templatePath}: статус ${response.status}`);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const html = await response.text();
-                placeholder.innerHTML = html;
-                console.log(`Шаблон ${templatePath} успешно загружен.`); // Для отладки
-            } catch (error) {
-                console.error(`Ошибка при загрузке шаблона ${templatePath}:`, error);
-                placeholder.innerHTML = `<p style="color: red; text-align: center; padding: 20px;">Не удалось загрузить ${templatePath}. Проверьте путь и наличие файла.</p>`;
-            }
-        } else {
-            console.warn(`Плейсхолдер с ID "${placeholderId}" не найден.`); // Для отладки
-        }
+    if (menuToggle && mainNav && mainNavOverlay) {
+        menuToggle.addEventListener('click', function() {
+            mainNav.classList.toggle('active');
+            mainNavOverlay.classList.toggle('active');
+            document.body.classList.toggle('no-scroll'); // Optional: disable body scroll when menu is open
+        });
+
+        mainNavOverlay.addEventListener('click', function() {
+            mainNav.classList.remove('active');
+            mainNavOverlay.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        });
     }
 
-    // Загружаем Header и Footer
-    loadTemplate('header-placeholder', 'header-template.html')
-        .then(() => {
-            initializeHeaderScripts();
-        })
-        .catch(error => {
-            console.error("Ошибка при инициализации скриптов хедера:", error);
-        });
-
-    loadTemplate('footer-placeholder', 'footer-template.html')
-        .catch(error => {
-            console.error("Ошибка при загрузке футера:", error);
-        });
-
-
-    // -------------------- 1. Мобильное меню (теперь функция, вызываемая после загрузки header) --------------------
-    function initializeHeaderScripts() {
-        const menuToggle = document.querySelector('.menu-toggle');
-        const mainNav = document.querySelector('.main-nav');
-        const mainNavOverlay = document.querySelector('.main-nav-overlay');
-
-        if (menuToggle && mainNav && mainNavOverlay) {
-            menuToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                mainNav.classList.toggle('active');
-                mainNavOverlay.classList.toggle('active');
-            });
-
-            mainNav.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    if (mainNav.classList.contains('active')) {
-                        mainNav.classList.remove('active');
-                        mainNavOverlay.classList.remove('active');
-                    }
-                });
-            });
-
-            document.addEventListener('click', (e) => {
-                if (mainNav.classList.contains('active') && !mainNav.contains(e.target) && !menuToggle.contains(e.target)) {
-                    mainNav.classList.remove('active');
-                    mainNavOverlay.classList.remove('active');
-                }
-            });
-
-            mainNavOverlay.addEventListener('click', () => {
+    // Close mobile menu when a nav link is clicked
+    const navLinks = document.querySelectorAll('.main-nav a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (mainNav.classList.contains('active')) {
                 mainNav.classList.remove('active');
                 mainNavOverlay.classList.remove('active');
-            });
-
-            // Инициализация кнопок модального окна после загрузки хедера
-            initializeModal();
-        }
-    }
-
-
-    // -------------------- 2. Модальное окно для "Join Beta" (теперь функция) --------------------
-    function initializeModal() {
-        const betaFormModal = document.getElementById('betaFormModal');
-        const openBetaButtons = document.querySelectorAll('.open-beta-modal');
-        const closeButtons = document.querySelectorAll('.close-button');
-
-        openBetaButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (betaFormModal) {
-                    betaFormModal.style.display = 'flex';
-                }
-            });
-        });
-
-        closeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                button.closest('.modal').style.display = 'none';
-            });
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target === betaFormModal) {
-                betaFormModal.style.display = 'none';
+                document.body.classList.remove('no-scroll');
             }
         });
+    });
 
-        const betaForm = document.getElementById('betaForm');
-        if (betaForm) {
-            betaForm.addEventListener('submit', (event) => {
-                event.preventDefault();
-                alert('Thank you for your interest! Your submission has been received.');
-                if (betaFormModal) {
-                    betaFormModal.style.display = 'none';
-                }
-                betaForm.reset();
-            });
-        }
-    }
 
-    // -------------------- 3. Аккордеон для FAQ --------------------
-    if (document.querySelector('.faq-question')) {
-        document.querySelectorAll('.faq-question').forEach(item => {
-            item.addEventListener('click', () => {
-                const faqItem = item.parentElement;
-                const answer = item.nextElementSibling;
-                const plusIcon = item.querySelector('.plus');
+    // ===========================================
+    // Smooth Scrolling for Navigation Links
+    // ===========================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
 
-                const wasActive = faqItem.classList.contains('active');
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
 
-                document.querySelectorAll('.faq-item').forEach(el => {
-                    if (el !== faqItem) {
-                        el.classList.remove('active');
-                        el.querySelector('.faq-answer').style.maxHeight = '0';
-                        el.querySelector('.faq-question .plus').style.transform = 'rotate(0deg)';
-                    }
+            if (targetElement) {
+                // Adjust scroll position for fixed header if needed
+                const headerOffset = document.querySelector('.main-header') ? document.querySelector('.main-header').offsetHeight : 0;
+                const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
                 });
-
-                if (!wasActive) {
-                    faqItem.classList.add('active');
-                    answer.style.maxHeight = answer.scrollHeight + 'px';
-                    if (plusIcon) plusIcon.style.transform = 'rotate(45deg)';
-                } else {
-                    faqItem.classList.remove('active');
-                    answer.style.maxHeight = '0';
-                    if (plusIcon) plusIcon.style.transform = 'rotate(0deg)';
-                }
-            });
+            }
         });
-    }
+    });
 
 
-    // -------------------- 4. Аккордеон для Мобильного Роадмапа --------------------
-    if (document.querySelector('.mobile-roadmap-item')) {
-        document.querySelectorAll('.mobile-roadmap-item').forEach(item => {
-            item.addEventListener('click', (event) => {
-                const mobileRoadmapItem = item;
-                const details = mobileRoadmapItem.querySelector('.mobile-roadmap-details');
-                
-                const wasActive = mobileRoadmapItem.classList.contains('active');
-
-                document.querySelectorAll('.mobile-roadmap-item').forEach(el => {
-                    if (el !== mobileRoadmapItem) {
-                        el.classList.remove('active');
-                        el.querySelector('.mobile-roadmap-details').style.maxHeight = '0';
-                        el.querySelector('.mobile-roadmap-details').style.opacity = '0';
-                    }
-                });
-
-                if (!wasActive) {
-                    mobileRoadmapItem.classList.add('active');
-                    details.style.opacity = '1';
-                    details.style.maxHeight = details.scrollHeight + 'px';
-                } else {
-                    mobileRoadmapItem.classList.remove('active');
-                    details.style.opacity = '0';
-                    details.style.maxHeight = '0';
-                }
-            });
-        });
-    }
-
-    // -------------------- 5. Анимация появления элементов мобильного роадмапа при скролле --------------------
-    const roadmapItemsMobile = document.querySelectorAll('.mobile-roadmap-item');
-
-    if (roadmapItemsMobile.length > 0) {
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.2
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('revealed');
-                    // observer.unobserve(entry.target); // Optional: Stop observing once revealed
-                } else {
-                    // entry.target.classList.remove('revealed'); // Optional: Remove if scrolls out
-                }
-            });
-        }, observerOptions);
-
-        roadmapItemsMobile.forEach(item => {
-            observer.observe(item);
-        });
-    }
-
-    // -------------------- НОВЫЕ АНИМАЦИИ И ЛОГИКА ДЛЯ ДЕСКТОПНОГО РОАДМАПА --------------------
-    const roadmapItemsDesktop = document.querySelectorAll('.timeline-item');
-
-    if (roadmapItemsDesktop.length > 0) {
-        // Логика аккордеона для десктопного роадмапа
-        roadmapItemsDesktop.forEach(item => {
-            item.addEventListener('click', () => {
-                const detailsParagraph = item.querySelector('p'); // Находим параграф с деталями
-                const wasActive = item.classList.contains('active');
-
-                // Закрываем все остальные открытые элементы
-                roadmapItemsDesktop.forEach(el => {
-                    if (el !== item && el.classList.contains('active')) {
-                        el.classList.remove('active');
-                        el.querySelector('p').style.maxHeight = '0';
-                        el.querySelector('p').style.opacity = '0';
-                    }
-                });
-
-                // Переключаем активность текущего элемента
-                if (!wasActive) {
-                    item.classList.add('active');
-                    detailsParagraph.style.maxHeight = detailsParagraph.scrollHeight + 'px';
-                    detailsParagraph.style.opacity = '1';
-                } else {
-                    item.classList.remove('active');
-                    detailsParagraph.style.maxHeight = '0';
-                    detailsParagraph.style.opacity = '0';
-                }
-            });
-        });
-
-        // Анимация появления элементов десктопного роадмапа при скролле
-        const observerOptionsDesktop = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.3 // Можно регулировать порог видимости
-        };
-
-        const observerDesktop = new IntersectionObserver((entries, observer) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    // Добавляем задержку для каждого элемента
-                    setTimeout(() => {
-                        entry.target.classList.add('revealed');
-                    }, index * 150); // Задержка 150мс на каждый элемент
-                    // observer.unobserve(entry.target); // Отключить, если нужно, чтобы анимация срабатывала только один раз
-                } else {
-                    // entry.target.classList.remove('revealed'); // Раскомментировать, если нужно, чтобы исчезали при прокрутке вверх
-                }
-            });
-        }, observerOptionsDesktop);
-
-        roadmapItemsDesktop.forEach(item => {
-            observerDesktop.observe(item);
-        });
-    }
-
-
-    // -------------------- 6. Логика Drag and Drop для загрузки файлов (с анимацией) --------------------
+    // ===========================================
+    // Upload Area Drag & Drop and File Handling
+    // ===========================================
     const uploadArea = document.getElementById('uploadArea');
-    if (uploadArea) {
-        const uploadButton = document.getElementById('uploadButton');
-        const fileInput = document.getElementById('fileInput');
-        const fileList = document.getElementById('fileList');
-        const uploadProgressContainer = document.getElementById('uploadProgressContainer');
-        const uploadProgressBar = document.getElementById('uploadProgressBar');
-        const uploadStatusText = document.getElementById('uploadStatusText');
+    const uploadButton = document.getElementById('uploadButton');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    const uploadProgressBarContainer = document.querySelector('.upload-progress-container');
+    const uploadProgressBar = document.querySelector('.upload-progress-bar');
+    const uploadStatusText = document.querySelector('.upload-status-text');
 
-        uploadButton.addEventListener('click', () => {
-            fileInput.click();
-        });
-
-        fileInput.addEventListener('change', () => {
-            handleFiles(fileInput.files);
-        });
-
+    if (uploadArea && uploadButton && fileInput && fileList && uploadProgressBarContainer && uploadProgressBar && uploadStatusText) {
+        // Prevent default drag behaviors
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             uploadArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false); // Prevent drop outside
         });
 
+        // Highlight drop area when item is dragged over
         ['dragenter', 'dragover'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, highlight, false);
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('highlight'), false);
         });
 
         ['dragleave', 'drop'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, unhighlight, false);
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('highlight'), false);
         });
 
+        // Handle dropped files
         uploadArea.addEventListener('drop', handleDrop, false);
+
+        // Handle button click for file input
+        uploadButton.addEventListener('click', () => fileInput.click());
+
+        // Handle file selection via input
+        fileInput.addEventListener('change', (event) => {
+            handleFiles(event.target.files);
+        });
 
         function preventDefaults(e) {
             e.preventDefault();
             e.stopPropagation();
-        }
-
-        function highlight() {
-            uploadArea.classList.add('highlight');
-        }
-
-        function unhighlight() {
-            uploadArea.classList.remove('highlight');
         }
 
         function handleDrop(e) {
@@ -317,47 +108,196 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function handleFiles(files) {
-            fileList.innerHTML = '';
-            if (files.length === 0) {
-                return;
-            }
+            fileList.innerHTML = ''; // Clear previous list
+            if (files.length > 0) {
+                uploadProgressBarContainer.style.display = 'block';
+                uploadStatusText.style.display = 'block';
+                uploadStatusText.textContent = 'Uploading... 0%';
+                uploadProgressBar.style.width = '0%';
 
-            uploadProgressContainer.style.display = 'block';
-            uploadStatusText.style.display = 'block';
-            uploadProgressBar.style.width = '0%';
-            uploadStatusText.textContent = 'Uploading files... 0%';
-
-            const totalFiles = files.length;
-
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                if (progress <= 100) {
-                    uploadProgressBar.style.width = `${progress}%`;
-                    uploadStatusText.textContent = `Uploading files... ${progress}%`;
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const listItem = document.createElement('div');
+                    listItem.textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+                    fileList.appendChild(listItem);
                 }
 
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    uploadStatusText.textContent = 'Upload complete!';
-                    uploadArea.classList.remove('highlight');
-
-                    setTimeout(() => {
-                        for (const file of files) {
-                            const fileItem = document.createElement('div');
-                            fileItem.textContent = `- ${file.name}`;
-                            fileList.appendChild(fileItem);
-                        }
-                        alert(`${totalFiles} file(s) successfully processed.`);
-
+                // Simulate upload progress
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 10;
+                    uploadProgressBar.style.width = `${progress}%`;
+                    uploadStatusText.textContent = `Uploading... ${progress}%`;
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        uploadStatusText.textContent = 'Upload Complete!';
                         setTimeout(() => {
-                            uploadProgressContainer.style.display = 'none';
+                            uploadProgressBarContainer.style.display = 'none';
                             uploadStatusText.style.display = 'none';
                             fileList.innerHTML = '';
-                        }, 2000);
-                    }, 500);
-                }
-            }, 150);
+                        }, 2000); // Hide after 2 seconds
+                    }
+                }, 200);
+            }
         }
     }
-});
+
+
+    // ===========================================
+    // Roadmap Dot Interaction (Desktop & Tablet)
+    // ===========================================
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    timelineItems.forEach(item => {
+        const circle = item.querySelector('.circle');
+        const paragraph = item.querySelector('p');
+
+        if (circle && paragraph) {
+            circle.addEventListener('click', function() {
+                // Remove 'active' from all items first
+                timelineItems.forEach(i => {
+                    if (i !== item) {
+                        i.classList.remove('active');
+                    }
+                });
+                // Toggle 'active' on the clicked item
+                item.classList.toggle('active');
+            });
+        }
+    });
+
+
+    // ===========================================
+    // Mobile Roadmap Accordion
+    // ===========================================
+    const mobileRoadmapItems = document.querySelectorAll('.mobile-roadmap-item');
+    mobileRoadmapItems.forEach(item => {
+        const header = item.querySelector('.mobile-roadmap-header');
+        const details = item.querySelector('.mobile-roadmap-details');
+
+        if (header && details) {
+            header.addEventListener('click', function() {
+                // Toggle 'active' class on the clicked item
+                item.classList.toggle('active');
+
+                // Toggle max-height for smooth open/close animation
+                if (item.classList.contains('active')) {
+                    details.style.maxHeight = details.scrollHeight + "px";
+                } else {
+                    details.style.maxHeight = null;
+                }
+
+                // Close other open items
+                mobileRoadmapItems.forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
+                        otherItem.querySelector('.mobile-roadmap-details').style.maxHeight = null;
+                    }
+                });
+            });
+        }
+    });
+
+
+    // ===========================================
+    // FAQ Accordion
+    // ===========================================
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+
+        if (question && answer) {
+            question.addEventListener('click', function() {
+                // Toggle 'active' class on the clicked FAQ item
+                item.classList.toggle('active');
+
+                // Toggle max-height for smooth open/close animation
+                if (item.classList.contains('active')) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                } else {
+                    answer.style.maxHeight = null;
+                }
+
+                // Optional: Close other open FAQ items
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
+                        otherItem.querySelector('.faq-answer').style.maxHeight = null;
+                    }
+                });
+            });
+        }
+    });
+
+
+    // ===========================================
+    // Roadmap Line and Item Scroll Animation (NEW)
+    // ===========================================
+    const roadmapSection = document.querySelector('.product-roadmap');
+    const desktopTimelineWrapper = document.querySelector('.timeline-wrapper');
+    const mobileRoadmapWrapper = document.querySelector('.mobile-roadmap-wrapper');
+
+    function checkRoadmapVisibility() {
+        if (!roadmapSection) return; // Exit if roadmap section doesn't exist
+
+        const triggerBottom = window.innerHeight * 0.8; // Trigger when 80% of viewport is scrolled
+        const roadmapSectionTop = roadmapSection.getBoundingClientRect().top;
+
+        // Animate individual roadmap items (both desktop and mobile)
+        const allRoadmapItems = document.querySelectorAll('.timeline-item, .mobile-roadmap-item');
+        allRoadmapItems.forEach(item => {
+            const itemTop = item.getBoundingClientRect().top;
+            if (itemTop < triggerBottom) {
+                item.classList.add('revealed');
+            }
+        });
+
+        // Activate line animation for desktop roadmap
+        if (desktopTimelineWrapper) {
+            const timelineTop = desktopTimelineWrapper.getBoundingClientRect().top;
+            if (timelineTop < triggerBottom && !desktopTimelineWrapper.classList.contains('animated')) {
+                desktopTimelineWrapper.classList.add('animated');
+            }
+        }
+
+        // Activate line animation for mobile roadmap
+        if (mobileRoadmapWrapper) {
+            const mobileRoadmapTop = mobileRoadmapWrapper.getBoundingClientRect().top;
+            if (mobileRoadmapTop < triggerBottom && !mobileRoadmapWrapper.classList.contains('animated')) {
+                mobileRoadmapWrapper.classList.add('animated');
+            }
+        }
+    }
+
+    // Initial check on load
+    checkRoadmapVisibility();
+
+    // Check on scroll
+    window.addEventListener('scroll', checkRoadmapVisibility);
+    window.addEventListener('resize', checkRoadmapVisibility); // Recheck on resize
+
+
+    // ===========================================
+    // Modal functionality
+    // ===========================================
+    const openModalBtn = document.getElementById('openModalBtn');
+    const modal = document.getElementById('myModal');
+    const closeModalBtn = document.querySelector('.close-button');
+
+    if (openModalBtn && modal && closeModalBtn) {
+        openModalBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+
+}); // End of DOMContentLoaded
