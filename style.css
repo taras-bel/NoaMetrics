@@ -17,7 +17,7 @@
     --upload-highlight-bg: #e0fffb; /* New color for drag highlight */
     --customer-text-color: #909b99;
     --timeline-text-color: #bcbcbc;
-    --timeline-dot-bg: #535353;
+    --timeline-dot-bg: #535353; /* Changed to match provided image */
     --link-opacity: 0.6;
 
     /* Fonts */
@@ -244,26 +244,47 @@ body {
     content: '';
     position: absolute;
     /* (circle_height / 2) + circle_border_width - (line_height / 2) */
-    top: calc((67px / 2) + 8px - (4px / 2));
+    /* 67px (circle_height) / 2 = 33.5px */
+    /* 8px (circle_border_width) */
+    /* 4px (line_height) / 2 = 2px */
+    /* top = 33.5 + 8 - 2 = 39.5px */
+    top: 39.5px; /* Скорректировано для точного центрирования */
     left: 0;
-    right: 0;
+    /* Укорачиваем линию, чтобы освободить место для стрелки */
+    right: 12px; /* Ширина стрелки (12px) */
     height: 4px; /* Line height */
     background: var(--green-highlight);
     z-index: -1;
+
+    /* Анимация линии */
+    transform-origin: left center;
+    transform: scaleX(0); /* Изначально скрыта */
+    transition: transform 1s ease-out; /* Анимация появления */
 }
 
 /* Стрелка для десктопа/горизонтальных планшетов */
 .timeline:after {
     content: '';
     position: absolute;
-    right: 0;
-    top: calc((67px / 2) + 8px - 7px); /* Align with the line, minus half arrow height */
+    /* Позиционирование стрелки за линией */
+    right: -12px; /* Смещаем на ширину самой стрелки */
+    top: calc(39.5px - 7px); /* Align with the line, minus half arrow height (7px is half of 14px total height) */
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 7px 0 7px 12px; /* Pointing right */
+    border-width: 7px 0 7px 12px; /* Pointing right: height (7+7) = 14px, width = 12px */
     border-color: transparent transparent transparent var(--green-highlight);
     z-index: -1;
+    opacity: 0; /* Изначально скрыта */
+    transition: opacity 1s ease-out; /* Анимация появления */
+}
+
+/* Класс для активации анимации */
+.timeline-wrapper.animated .timeline:before {
+    transform: scaleX(1);
+}
+.timeline-wrapper.animated .timeline:after {
+    opacity: 1;
 }
 
 
@@ -353,30 +374,54 @@ body {
     padding: 20px 0; /* Use container padding for the overall left spacing */
     margin-top: 40px;
 }
+
+/* Линия таймлайна для мобильных устройств */
 .mobile-roadmap-line {
     position: absolute;
     /* (circle_width / 2) + circle_border_width - (line_width / 2) */
-    left: calc((30px / 2) + 8px - (4px / 2)); /* This should be constant */
+    /* 30px (circle_width) / 2 = 15px */
+    /* 8px (circle_border_width) */
+    /* 4px (line_width) / 2 = 2px */
+    /* left = 15 + 8 - 2 = 21px */
+    left: 21px; /* Скорректировано для точного центрирования */
     top: 0;
-    bottom: 0;
+    /* Укорачиваем линию, чтобы освободить место для стрелки */
+    bottom: 12px; /* Высота стрелки (12px) */
     width: 4px;
     background-color: var(--green-highlight);
     z-index: 0;
+
+    /* Анимация линии */
+    transform-origin: top center;
+    transform: scaleY(0); /* Изначально скрыта */
+    transition: transform 1s ease-out; /* Анимация появления */
 }
 /* Стрелка для мобильных устройств */
 .mobile-roadmap-line:after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: calc(50% - 7px); /* Center arrow on the 4px line */
-    transform: translateX(-50%); /* Adjust to precisely center */
+    /* Позиционирование стрелки за линией */
+    bottom: -12px; /* Смещаем на высоту самой стрелки */
+    left: calc(50% - 7px); /* Center arrow on the 4px line (7px is half of 14px total width of arrow base) */
+    /* transform: translateX(-50%);  Уже не нужен, так как left рассчитан точно */
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 12px 7px 0 7px; /* Pointing down */
+    border-width: 12px 7px 0 7px; /* Pointing down: height = 12px, width (7+7) = 14px */
     border-color: var(--green-highlight) transparent transparent transparent;
     z-index: 0;
+    opacity: 0; /* Изначально скрыта */
+    transition: opacity 1s ease-out; /* Анимация появления */
 }
+
+/* Класс для активации анимации */
+.mobile-roadmap-wrapper.animated .mobile-roadmap-line {
+    transform: scaleY(1);
+}
+.mobile-roadmap-wrapper.animated .mobile-roadmap-line:after {
+    opacity: 1;
+}
+
 
 .mobile-roadmap {
     display: flex;
@@ -390,7 +435,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
     /* Left padding for text, consider dot size and line position */
-    padding-left: calc( (30px + 8px * 2) + 20px ); /* Total dot width + spacing */
+    padding-left: calc( (30px + 8px * 2) + 20px ); /* Total dot width (30 + 16) + spacing */
     position: relative;
     width: 100%;
     margin-bottom: 30px;
@@ -412,11 +457,9 @@ body {
     border: 8px solid var(--green-highlight);
     border-radius: 50%;
     position: absolute;
-    /* Position relative to the timeline line (which is inside mobile-roadmap-wrapper) */
-    left: calc( var(--timeline-line-offset-mobile) - (30px / 2) - 8px ); /* (line left) - (half point width) - (border width) */
+    /* Позиционируем точку точно по центру линии */
+    left: calc(21px - (30px / 2) - 8px); /* line left - half point width - border width */
     top: 0;
-    /* We don't use translateX here because 'left' is calculated precisely */
-    /* transform: translateX(-50%); */ /* This caused issues, remove or recalculate left */
     cursor: pointer;
     transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
@@ -714,15 +757,15 @@ body {
         max-width: 1440px;
         padding: 0 40px;
     }
+    /* Десктопная линия и стрелка */
     .timeline:before {
-        left: 40px;
-        right: 40px;
-        /* (circle_height / 2) + circle_border_width - (line_height / 2) */
-        top: calc((67px / 2) + 8px - (4px / 2));
+        left: 40px; /* Отступ от края контейнера */
+        right: calc(40px + 12px); /* Отступ справа + ширина стрелки */
+        top: 39.5px;
     }
     .timeline:after {
-        right: 40px;
-        top: calc((67px / 2) + 8px - 7px);
+        right: 40px; /* Отступ справа, чтобы стрелка начиналась за линией */
+        top: calc(39.5px - 7px);
     }
     .timeline-item h4 { font-size: 44px; }
     .timeline-item p { font-size: 28px; }
@@ -816,21 +859,17 @@ body {
 
     /* For consistency, define the line offset in a variable if needed, or calculate relative to item */
     .mobile-roadmap-line {
-        /* (dot_width / 2) + dot_border_width - (line_width / 2) */
-        left: calc((30px / 2) + 8px - (4px / 2));
+        left: 21px; /* Скорректировано */
+        bottom: 12px; /* Укорочено на высоту стрелки */
     }
     .mobile-roadmap-line:after {
-        left: calc(50% - 7px); /* Center arrow on the 4px line */
-        transform: translateX(-50%);
+        bottom: -12px; /* Стрелка после линии */
+        left: calc(50% - 7px);
     }
     .mobile-roadmap-point {
-        /* Position of the dot's top-left corner */
-        left: 0; /* Position the dot relative to its parent .mobile-roadmap-item */
-        /* Translate the dot to the correct horizontal center of the line */
-        transform: translateX(calc( -50% + ((30px / 2) + 8px - (4px / 2)) ));
+        left: calc(21px - (30px / 2) - 8px); /* Скорректировано */
     }
     .mobile-roadmap-item {
-        /* Padding for text, considering dot size and line position */
         padding-left: calc( (30px + 8px * 2) + 20px ); /* Total dot width (30 + 16) + spacing */
     }
 
@@ -990,16 +1029,15 @@ body {
     .mobile-roadmap-wrapper { display: block; }
     /* Mobile styles for the line and points */
     .mobile-roadmap-line {
-        /* (dot_width / 2) + dot_border_width - (line_width / 2) */
-        left: calc((30px / 2) + 8px - (4px / 2));
+        left: 21px; /* Скорректировано */
+        bottom: 12px; /* Укорочено на высоту стрелки */
     }
     .mobile-roadmap-line:after {
+        bottom: -12px; /* Стрелка после линии */
         left: calc(50% - 7px);
-        transform: translateX(-50%);
     }
     .mobile-roadmap-point {
-        left: 0;
-        transform: translateX(calc( -50% + ((30px / 2) + 8px - (4px / 2)) ));
+        left: calc(21px - (30px / 2) - 8px); /* Скорректировано */
     }
     .mobile-roadmap-item {
         padding-left: calc( (30px + 8px * 2) + 20px ); /* Total dot width (30 + 16) + spacing */
@@ -1046,6 +1084,8 @@ body {
         order: 0;
         gap: 10px;
     }
+    .footer-column h3 { font-size: 15px; margin-bottom: 8px; }
+    .footer-column ul li a { font-size: 12px; }
     .social-links {
         order: 1;
         margin-left: 0;
@@ -1115,4 +1155,18 @@ body {
     }
     .footer-column h3 { font-size: 15px; margin-bottom: 8px; }
     .footer-column ul li a { font-size: 12px; }
+    .social-links {
+        order: 1;
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+    }
+    .social-links h3 { text-align: center; }
+    .social-links ul { justify-content: center; }
+
+    .footer-logo-info {
+        align-items: center;
+        text-align: center;
+        order: 2;
+    }
 }
