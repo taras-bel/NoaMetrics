@@ -244,7 +244,7 @@ body {
 .timeline:before {
     content: '';
     position: absolute;
-    top: 32px; /* ИЗМЕНЕНО */
+    top: 32px;
     left: 0;
     right: 12px; /* Оставляем место для стрелки (12px) */
     height: 4px; /* Высота линии */
@@ -260,7 +260,7 @@ body {
     content: '';
     position: absolute;
     right: 0; /* Позиционируем стрелку в самом конце */
-    top: calc(33.5px - 7px); /* ИЗМЕНЕНО */
+    top: calc(33.5px - 7px);
     width: 0;
     height: 0;
     border-style: solid;
@@ -369,7 +369,7 @@ body {
 /* Линия таймлайна для мобильных устройств */
 .mobile-roadmap-line {
     position: absolute;
-    left: 21px; /* Позиция рассчитана: (30px dot + 2*8px border)/2 - (4px line)/2 */
+    left: 12px; /* ИЗМЕНЕНО: Сдвиг влево на ~9px для компенсации смещения */
     top: 0;
     bottom: 0; /* Линия идет до самого низа */
     width: 4px;
@@ -720,7 +720,7 @@ body {
     }
 
     .main-header { padding: 20px 40px; }
-    .hero-section { padding: 100px 40px; }
+    .hero-section { padding: 100px 40px; min-height: 580px; }
     .hero-content h1 { font-size: 60px; }
     .hero-content p { font-size: 22px; }
     .hero-buttons .button { width: 400px; height: 65px; font-size: 22px; }
