@@ -369,7 +369,7 @@ body {
 /* Линия таймлайна для мобильных устройств */
 .mobile-roadmap-line {
     position: absolute;
-    left: 12px; /* Сдвиг влево на ~9px для компенсации смещения */
+    left: 14px; /* Сдвиг на 2px правее от исходного 12px */
     top: 0;
     bottom: 0; /* Линия идет до самого низа */
     width: 4px;
@@ -383,14 +383,14 @@ body {
 .mobile-roadmap-line:after {
     content: '';
     position: absolute;
-    bottom: 0; /* Стрелка находится в самом низу линии */
-    left: calc(50% + 2px); /* ИЗМЕНЕНО: Сдвиг стрелки на 2px вправо */
+    bottom: 12px; /* Изменено: Перемещено вверх на 12px, чтобы основание совпадало с концом линии */
+    left: calc(50%); /* Центрирование стрелки на линии */
     transform: translateX(-50%); /* Точное центрирование стрелки на линии */
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 12px 7px 0 7px;
-    border-color: var(--green-highlight) transparent transparent transparent;
+    border-width: 12px 7px 0 7px; /* Arrow shape definition */
+    border-color: var(--green-highlight) transparent transparent transparent; /* Arrow color */
     z-index: 0;
     opacity: 0;
     transition: opacity 0.5s ease-out 0.5s;
