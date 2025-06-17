@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function() {
-    
+
     // ===========================================
     // ЗАГРУЗКА HEADER И FOOTER (ДОБАВЛЕННЫЙ БЛОК)
     // ===========================================
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     otherItem.classList.remove('active');
                     otherItem.querySelector('.mobile-roadmap-details').style.maxHeight = null;
                 });
-                
+
                 if (!isActive) {
                     item.classList.add('active');
                     details.style.maxHeight = details.scrollHeight + "px";
@@ -212,14 +212,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (question && answer) {
             question.addEventListener('click', function() {
                 const isActive = item.classList.contains('active');
-                
+
                 faqItems.forEach(otherItem => {
                     if (otherItem !== item) {
                         otherItem.classList.remove('active');
                         otherItem.querySelector('.faq-answer').style.maxHeight = null;
                     }
                 });
-                
+
                 if (!isActive) {
                     item.classList.add('active');
                     answer.style.maxHeight = answer.scrollHeight + "px";
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         }
     }
-    
+
     checkRoadmapVisibility();
     window.addEventListener('scroll', checkRoadmapVisibility);
     window.addEventListener('resize', checkRoadmapVisibility);
@@ -272,8 +272,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Modal functionality
     const modal = document.getElementById('betaFormModal');
     const closeModalBtn = document.querySelector('.modal .close-button');
-    
-    // Используем делегирование событий для кнопок открытия модального окна, 
+
+    // Используем делегирование событий для кнопок открытия модального окна,
     // так как они могут быть загружены динамически
     document.body.addEventListener('click', function(event) {
         if (event.target.matches('.open-beta-modal')) {
