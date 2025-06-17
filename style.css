@@ -89,7 +89,7 @@ body {
 .menu-toggle {
     display: none;
     font-size: 2rem;
-    color: var(--primary-text-color); /* Изначальный цвет */
+    color: var(--white); /* Изменено на белый цвет для мобильной версии */
     transition: color 0.3s ease; /* Плавное изменение цвета */
 }
 .menu-toggle:hover {
@@ -680,7 +680,11 @@ body {
     }
     .main-nav ul li { width: 100%; }
     .main-nav a { font-size: 20px; }
-    .menu-toggle { display: block; margin-left: 20px; }
+    .menu-toggle {
+        display: block;
+        margin-left: 20px;
+        color: var(--white); /* Устанавливаем белый цвет для бургер-меню на мобильных */
+    }
     .main-header .scan-cv-btn { display: none; } /* Скрываем кнопку в мобильном меню */
     .hero-section { padding: 50px 20px; min-height: auto; }
     .hero-content h1 { font-size: 36px; text-align: center; }
