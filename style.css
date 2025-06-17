@@ -658,43 +658,36 @@ body {
 
 /* Общие стили для планшетов и устройств с большими экранами, таких как Asus Zenbook Fold 17 в разложенном виде */
 @media (min-width: 1025px) and (max-width: 1920px) {
-    /* Например, для Asus Zenbook Fold 17 (2560x1920, но может быть 1920x1280 в сложенном виде) и Asus Zenbook 15 (Full HD, 2.8K, 3K, 4K) */
-    /* В основном, чтобы убедиться, что контент не растягивается слишком сильно */
     .container {
-        max-width: 1440px; /* Ограничиваем максимальную ширину для комфортного чтения на очень широких экранах */
-        margin: 0 auto; /* Центрируем контейнер */
-        padding: 0 40px; /* Увеличиваем внутренние отступы */
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 0 40px;
     }
 
     .main-header { padding: 20px 40px; }
     .hero-section { padding: 100px 40px; }
-    .hero-content h1 { font-size: 60px; } /* Чуть больше для больших экранов */
+    .hero-content h1 { font-size: 60px; }
     .hero-content p { font-size: 22px; }
     .hero-buttons .button { width: 400px; height: 65px; font-size: 22px; }
 
     .featured-in-section, .problem-statement, .upload-promo-section,
     .features-overview, .benefits-section, .product-roadmap,
     .testimonials-section, .faq-section-wrapper, .cta-section {
-        padding: 100px 40px; /* Увеличиваем отступы секций */
+        padding: 100px 40px;
     }
 
-    /* Roadmap специфичные изменения для больших планшетов и настольных устройств */
-    .timeline-wrapper {
-        display: flex; /* Показываем горизонтальный роадмап */
-    }
-    .mobile-roadmap-wrapper {
-        display: none; /* Скрываем мобильный роадмап */
-    }
+    .timeline-wrapper { display: flex; }
+    .mobile-roadmap-wrapper { display: none; }
     .timeline {
-        max-width: 1440px; /* Увеличиваем максимальную ширину роадмапа */
+        max-width: 1440px;
         padding: 0 40px;
     }
-    .timeline-item h4 { font-size: 44px; } /* Чуть больше */
-    .timeline-item p { font-size: 28px; } /* Чуть больше */
+    .timeline-item h4 { font-size: 44px; }
+    .timeline-item p { font-size: 28px; }
     .timeline-item .circle {
-        width: 75px; /* Больше кружки */
+        width: 75px;
         height: 75px;
-        border-width: 10px; /* Толще граница */
+        border-width: 10px;
     }
 
     .problem-stats { grid-template-columns: repeat(3, 1fr); gap: 40px; }
@@ -705,11 +698,48 @@ body {
     .cta-content { padding: 70px; }
     .cta-content h2 { font-size: 48px; }
     .cta-content p { font-size: 22px; }
+
+    /* FOOTER specific adjustments for wide screens / larger tablets (1025px - 1920px) */
     .main-footer { padding: 80px 40px; }
+    .footer-container {
+        flex-direction: row; /* Maintain horizontal layout */
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 60px; /* Increase gap for more breathing room */
+    }
+    .footer-logo-info {
+        flex-basis: 250px; /* Give logo info a defined width, prevents shrinking */
+        text-align: left; /* Align text left */
+    }
+    .footer-right {
+        display: flex;
+        flex-direction: row; /* Keep content in a row */
+        flex-grow: 1; /* Allow it to grow and take available space */
+        justify-content: flex-end; /* Push to the right */
+        align-items: flex-start;
+        gap: 60px; /* Space between social links and other columns */
+        margin-left: 0; /* Reset margin-left auto */
+    }
+    .social-links {
+        order: -1; /* Keep social links first visually */
+        margin-bottom: 0; /* Reset margin from smaller screens */
+    }
+    .social-links ul {
+        justify-content: flex-start; /* Align social icons to the left */
+    }
+    .footer-links-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns */
+        gap: 40px; /* Adjust gap between columns */
+        flex-grow: 1; /* Allow grid to grow */
+        justify-items: flex-start; /* Align items to start of their cells */
+    }
+    .footer-column {
+        text-align: left; /* Align column text to left */
+    }
 }
 
 
-/* Адаптация для планшетов (обычные разрешения планшетов: 768px - 1024px) */
+/* Адаптация для планшетов (обычные разрешения планшетов: 769px - 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
     .main-nav ul { gap: 30px; }
     .hero-content h1 { font-size: 44px; }
@@ -726,35 +756,50 @@ body {
     .large-cta-button { width: 100%; max-width: 450px; }
     .benefits-section { grid-template-columns: 1fr; }
 
-    /* Здесь самое важное изменение для роадмапа:
-       На планшетах (от 769px до 1024px) мы можем попробовать использовать гибкий горизонтальный роадмап
-       или переключиться на мобильную версию, в зависимости от предпочтений.
-       Я предлагаю переключить на мобильную, чтобы избежать сжатия.
-    */
-    .timeline-wrapper { display: none; } /* Скрываем горизонтальный роадмап */
-    .mobile-roadmap-wrapper { display: block; } /* Показываем мобильный роадмап */
+    .timeline-wrapper { display: none; }
+    .mobile-roadmap-wrapper { display: block; }
 
     .testimonial-grid { grid-template-columns: 1fr; }
     .faq-container { flex-direction: column; align-items: center; }
     .faq-image-placeholder, .faq-content { width: 100%; }
+
+    /* FOOTER specific adjustments for tablets (769px - 1024px) */
+    .main-footer { padding: 50px 30px; } /* Slightly less padding */
     .footer-container {
-        grid-template-columns: 1fr;
-        flex-direction: column;
-        align-items: center;
+        flex-direction: column; /* Stack elements vertically */
+        align-items: center; /* Center horizontally */
+        gap: 30px; /* Maintain good spacing */
     }
-    .footer-logo-info { text-align: center; }
+    .footer-logo-info {
+        text-align: center; /* Center logo text */
+        flex-basis: auto; /* Remove fixed width */
+    }
     .footer-right {
-        margin-left: 0;
-        justify-content: center;
-        width: 100%;
+        margin-left: 0; /* Reset auto margin */
+        flex-direction: column; /* Stack columns vertically */
+        align-items: center; /* Center content in footer-right */
+        width: 100%; /* Take full width */
+        gap: 30px; /* Space between social links and other columns */
+    }
+    .social-links {
+        order: -1; /* Keep social links at the top of the footer-right block */
+        margin-bottom: 0; /* Reset margin from previous breakpoint */
+        width: 100%; /* Ensure it spans full width for centering */
+        text-align: center; /* Center its content */
+    }
+    .social-links h3 { text-align: center; }
+    .social-links ul {
+        justify-content: center; /* Center social icons */
     }
     .footer-links-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 колонки для ссылок */
+        grid-template-columns: repeat(3, 1fr); /* Try to keep 3 columns if space allows */
+        gap: 20px; /* Reduce gap to fit */
         width: 100%;
-        justify-items: center;
+        justify-items: center; /* Center individual items */
     }
-    .footer-column { text-align: center; }
-    .social-links { margin-bottom: 20px; order: -1; }
+    .footer-column {
+        text-align: center; /* Center column text */
+    }
 }
 
 
@@ -764,7 +809,7 @@ body {
     .main-nav {
         position: fixed;
         top: 0;
-        right: -100%; /* Скрыто за экраном */
+        right: -100%;
         width: 70%;
         height: 100%;
         background-color: var(--white);
@@ -790,9 +835,9 @@ body {
     .menu-toggle {
         display: block;
         margin-left: 20px;
-        color: var(--white); /* Устанавливаем белый цвет для бургер-меню на мобильных */
+        color: var(--white);
     }
-    .main-header .scan-cv-btn { display: none; } /* Скрываем кнопку в мобильном меню */
+    .main-header .scan-cv-btn { display: none; }
     .hero-section { padding: 50px 20px; min-height: auto; }
     .hero-content h1 { font-size: 36px; text-align: center; }
     .hero-content p { font-size: 18px; text-align: center; }
@@ -816,9 +861,8 @@ body {
     .benefit-item p { font-size: 24px; }
     .product-roadmap { padding: 50px 20px; }
     .product-roadmap h2 { font-size: 30px; margin-bottom: 60px; }
-    /* Mobile Roadmap adjustments */
-    .timeline-wrapper { display: none; } /* Скрываем горизонтальный роадмап */
-    .mobile-roadmap-wrapper { display: block; } /* Показываем мобильный роадмап */
+    .timeline-wrapper { display: none; }
+    .mobile-roadmap-wrapper { display: block; }
     .mobile-roadmap-line { left: 20px; }
     .mobile-roadmap-point { left: 20px; }
     .mobile-roadmap-item { padding-left: 60px; }
@@ -836,27 +880,36 @@ body {
     .cta-content h2 { font-size: 30px; }
     .cta-content p { font-size: 18px; }
     .cta-button { width: 100%; max-width: 300px; }
+
+    /* FOOTER specific adjustments for mobile (up to 768px) */
+    .main-footer { padding: 40px 20px; }
     .footer-container {
-        flex-direction: column; /* Элементы футера будут выстраиваться вертикально */
-        align-items: center; /* Центрируем по горизонтали */
-        gap: 20px; /* Уменьшаем отступ между элементами */
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
     }
-    .footer-logo-info { align-items: center; } /* Центрируем лого и текст под ним */
+    .footer-logo-info { align-items: center; text-align: center; }
     .footer-right {
-        margin-left: 0; /* Отменяем смещение вправо */
-        flex-direction: column; /* Элементы в footer-right выстраиваются вертикально */
-        align-items: center; /* Центрируем по горизонтали */
-        width: 100%; /* Занимает всю ширину */
-        gap: 20px; /* Уменьшаем отступ между группами */
-    }
-    .footer-links-grid {
-        grid-template-columns: 1fr; /* На мобильных одна колонка */
+        margin-left: 0;
+        flex-direction: column;
+        align-items: center;
         width: 100%;
-        justify-items: center; /* Центрируем ссылки */
+        gap: 20px;
+    }
+    .social-links {
+        order: -1;
+        margin-bottom: 0;
+        width: 100%;
+        text-align: center;
+    }
+    .social-links h3 { text-align: center; }
+    .social-links ul { justify-content: center; }
+    .footer-links-grid {
+        grid-template-columns: 1fr; /* Stack columns on smallest screens */
+        width: 100%;
+        justify-items: center;
     }
     .footer-column { text-align: center; }
-    .social-links { margin-bottom: 0; } /* Убираем отступ */
-    .social-links ul { justify-content: center; }
 
     .main-nav-overlay {
         position: fixed;
@@ -885,11 +938,19 @@ body {
     .info-block p { font-size: 20px; }
     .benefit-item p { font-size: 20px; }
     .product-roadmap h2 { font-size: 24px; }
-    .mobile-roadmap-header h4 { font-size: 20px; } /* Уменьшаем размер шрифта для мобильного роадмапа */
-    .mobile-roadmap-details p { font-size: 12px; } /* Уменьшаем размер шрифта для деталей */
+    .mobile-roadmap-header h4 { font-size: 20px; }
+    .mobile-roadmap-details p { font-size: 12px; }
     .testimonials-section h2 { font-size: 24px; }
     .cta-content h2 { font-size: 24px; }
     .cta-content p { font-size: 16px; }
     .cta-button { width: 100%; max-width: 300px; }
     .modal-content h2 { font-size: 24px; }
+
+    /* Further Footer adjustments for very small screens */
+    .footer-links-grid {
+        grid-template-columns: 1fr; /* Ensure single column for links */
+        gap: 15px; /* Smaller gap */
+    }
+    .footer-column h3 { font-size: 16px; margin-bottom: 15px; }
+    .footer-column ul li a { font-size: 13px; }
 }
