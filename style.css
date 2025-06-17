@@ -243,20 +243,12 @@ body {
 .timeline:before {
     content: '';
     position: absolute;
-    /* (circle_height / 2) + circle_border_width - (line_height / 2) */
-    /* 67px (circle_height) / 2 = 33.5px */
-    /* 8px (circle_border_width) */
-    /* 4px (line_height) / 2 = 2px */
-    /* top = 33.5 + 8 - 2 = 39.5px */
-    top: 39.5px; /* Скорректировано для точного центрирования */
+    top: 39.5px;
     left: 0;
-    /* Укорачиваем линию, чтобы освободить место для стрелки */
-    right: 12px; /* Ширина стрелки (12px) */
-    height: 4px; /* Line height */
+    right: 12px;
+    height: 4px;
     background: var(--green-highlight);
     z-index: -1;
-
-    /* Анимация линии */
     transform-origin: left center;
     transform: scaleX(0); /* Изначально скрыта */
     transition: transform 1s ease-out; /* Анимация появления */
@@ -266,13 +258,12 @@ body {
 .timeline:after {
     content: '';
     position: absolute;
-    /* Позиционирование стрелки за линией */
-    right: -12px; /* Смещаем на ширину самой стрелки */
-    top: calc(39.5px - 7px); /* Align with the line, minus half arrow height (7px is half of 14px total height) */
+    right: -12px;
+    top: calc(39.5px - 7px);
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 7px 0 7px 12px; /* Pointing right: height (7+7) = 14px, width = 12px */
+    border-width: 7px 0 7px 12px;
     border-color: transparent transparent transparent var(--green-highlight);
     z-index: -1;
     opacity: 0; /* Изначально скрыта */
@@ -376,22 +367,15 @@ body {
 }
 
 /* Линия таймлайна для мобильных устройств */
-.mobile-roadmap-line {
+.mobile-roadmap-line:before { /* Изменено на :before */
+    content: '';
     position: absolute;
-    /* (circle_width / 2) + circle_border_width - (line_width / 2) */
-    /* 30px (circle_width) / 2 = 15px */
-    /* 8px (circle_border_width) */
-    /* 4px (line_width) / 2 = 2px */
-    /* left = 15 + 8 - 2 = 21px */
     left: 21px; /* Скорректировано для точного центрирования */
     top: 0;
-    /* Укорачиваем линию, чтобы освободить место для стрелки */
     bottom: 12px; /* Высота стрелки (12px) */
     width: 4px;
     background-color: var(--green-highlight);
     z-index: 0;
-
-    /* Анимация линии */
     transform-origin: top center;
     transform: scaleY(0); /* Изначально скрыта */
     transition: transform 1s ease-out; /* Анимация появления */
@@ -400,10 +384,8 @@ body {
 .mobile-roadmap-line:after {
     content: '';
     position: absolute;
-    /* Позиционирование стрелки за линией */
     bottom: -12px; /* Смещаем на высоту самой стрелки */
-    left: calc(50% - 7px); /* Center arrow on the 4px line (7px is half of 14px total width of arrow base) */
-    /* transform: translateX(-50%);  Уже не нужен, так как left рассчитан точно */
+    left: calc(21px - 7px); /* Align with the line, minus half arrow width */
     width: 0;
     height: 0;
     border-style: solid;
@@ -415,7 +397,7 @@ body {
 }
 
 /* Класс для активации анимации */
-.mobile-roadmap-wrapper.animated .mobile-roadmap-line {
+.mobile-roadmap-wrapper.animated .mobile-roadmap-line:before { /* Изменено на :before */
     transform: scaleY(1);
 }
 .mobile-roadmap-wrapper.animated .mobile-roadmap-line:after {
@@ -814,6 +796,11 @@ body {
     .social-links ul {
         justify-content: flex-end;
     }
+    .footer-logo-info {
+        text-align: left;
+        flex-basis: auto;
+        order: 0; /* Reset order for desktop */
+    }
 }
 
 
@@ -857,20 +844,19 @@ body {
     .mobile-roadmap-wrapper { display: block; }
     .product-roadmap h2 { font-size: 36px; margin-bottom: 50px; }
 
-    /* For consistency, define the line offset in a variable if needed, or calculate relative to item */
-    .mobile-roadmap-line {
-        left: 21px; /* Скорректировано */
-        bottom: 12px; /* Укорочено на высоту стрелки */
+    .mobile-roadmap-line:before { /* Изменено на :before */
+        left: 21px;
+        bottom: 12px;
     }
     .mobile-roadmap-line:after {
-        bottom: -12px; /* Стрелка после линии */
-        left: calc(50% - 7px);
+        bottom: -12px;
+        left: calc(21px - 7px);
     }
     .mobile-roadmap-point {
-        left: calc(21px - (30px / 2) - 8px); /* Скорректировано */
+        left: calc(21px - (30px / 2) - 8px);
     }
     .mobile-roadmap-item {
-        padding-left: calc( (30px + 8px * 2) + 20px ); /* Total dot width (30 + 16) + spacing */
+        padding-left: calc( (30px + 8px * 2) + 20px );
     }
 
 
@@ -965,7 +951,7 @@ body {
     .menu-toggle {
         display: block;
         margin-left: 20px;
-        color: var(--white);
+        color: var(--primary-text-color); /* Adjusted color for visibility */
     }
     .main-header .scan-cv-btn { display: none; }
     .main-nav-overlay {
@@ -1028,19 +1014,19 @@ body {
     .timeline-wrapper { display: none; }
     .mobile-roadmap-wrapper { display: block; }
     /* Mobile styles for the line and points */
-    .mobile-roadmap-line {
-        left: 21px; /* Скорректировано */
-        bottom: 12px; /* Укорочено на высоту стрелки */
+    .mobile-roadmap-line:before { /* Изменено на :before */
+        left: 21px;
+        bottom: 12px;
     }
     .mobile-roadmap-line:after {
-        bottom: -12px; /* Стрелка после линии */
-        left: calc(50% - 7px);
+        bottom: -12px;
+        left: calc(21px - 7px);
     }
     .mobile-roadmap-point {
-        left: calc(21px - (30px / 2) - 8px); /* Скорректировано */
+        left: calc(21px - (30px / 2) - 8px);
     }
     .mobile-roadmap-item {
-        padding-left: calc( (30px + 8px * 2) + 20px ); /* Total dot width (30 + 16) + spacing */
+        padding-left: calc( (30px + 8px * 2) + 20px );
     }
 
 
