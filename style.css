@@ -182,32 +182,145 @@ body {
 .benefit-item p { font-family: var(--font-poppins); font-size: 32px; font-weight: 500; line-height: 1.5; }
 
 /* Product Roadmap Section */
-.product-roadmap { padding: 80px 20px; background: var(--light-grey-bg); text-align: center; }
-.product-roadmap h2 { font-family: var(--font-poppins); font-size: 40px; font-weight: 600; margin-bottom: 80px; }
-.timeline-wrapper { position: relative; width: 100%; padding-bottom: 50px; }
-.timeline-background { position: absolute; top: 50%; left: 0; width: 100%; height: 55px; transform: translateY(-50%); z-index: 0; object-fit: cover; }
-.timeline { position: relative; z-index: 1; display: flex; justify-content: space-around; align-items: flex-start; }
-.timeline-item { display: flex; flex-direction: column; align-items: center; width: 180px; }
+.product-roadmap {
+    padding: 80px 20px;
+    background: var(--light-grey-bg);
+    text-align: center;
+    position: relative; /* Для позиционирования фоновой линии */
+    overflow: hidden; /* Чтобы избежать вылезания элементов при анимации */
+}
+.product-roadmap h2 {
+    font-family: var(--font-poppins);
+    font-size: 40px;
+    font-weight: 600;
+    margin-bottom: 80px;
+}
+
+/* Скрываем мобильную версию на десктопе по умолчанию */
+.mobile-roadmap-wrapper {
+    display: none;
+}
+
+.timeline-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex; /* Чтобы центрировать саму линию таймлайна */
+    justify-content: center; /* Центрируем содержимое таймлайна */
+    align-items: flex-start;
+}
+
+/* Убираем timeline-background, будем рисовать линию через :before */
+.timeline-background {
+    display: none; /* Скрываем фоновое изображение */
+}
+
+.timeline {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between; /* Распределяет элементы равномерно */
+    align-items: flex-start;
+    width: 100%; /* Занимает всю доступную ширину */
+    max-width: 1200px; /* Ограничиваем ширину для лучшего вида */
+    margin: 0 auto; /* Центрируем */
+    padding: 0 20px; /* Внутренние отступы */
+}
+
+/* Линия таймлайна */
+.timeline:before {
+    content: '';
+    position: absolute;
+    top: 33px; /* Позиционируем по центру кружков */
+    left: 0;
+    right: 0;
+    height: 4px; /* Толщина линии */
+    background: var(--timeline-dot-bg); /* Цвет линии */
+    z-index: -1; /* Помещаем под кружки */
+}
+
+.timeline-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1; /* Позволяет элементам занимать равное пространство */
+    text-align: center;
+    position: relative; /* Для позиционирования кружков и текста */
+    padding-top: 80px; /* Отступ для кружков */
+    opacity: 0; /* Изначально скрыты для анимации */
+    transform: translateY(20px); /* Сдвиг для анимации */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Плавное появление */
+}
+
+/* Анимация при появлении (для IntersectionObserver) */
+.timeline-item.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .timeline-item .circle {
     width: 67px;
     height: 67px;
     background-color: var(--timeline-dot-bg);
-    border: 24px solid var(--green-highlight);
+    border: 8px solid var(--green-highlight); /* Уменьшаем толщину border */
     border-radius: 50%;
-    margin-bottom: 25px;
-    position: relative;
+    position: absolute; /* Абсолютное позиционирование относительно timeline-item */
+    top: 0; /* Прижимаем к верху timeline-item */
+    left: 50%; /* Центрируем по горизонтали */
+    transform: translateX(-50%); /* Точная центровка */
     cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0 0 0 0 rgba(15, 171, 171, 0.4); /* Изначальная тень (невидимая) */
+    animation: pulse 2s infinite ease-out; /* Анимация пульсации */
 }
+
+/* Отключаем анимацию пульсации, когда элемент раскрыт или наведен */
+.timeline-item.active .circle,
 .timeline-item .circle:hover {
-    transform: scale(1.1);
-    background-color: darken(var(--timeline-dot-bg), 10%); /* Просто для примера, использовать CSS-переменную или явный цвет */
+    animation: none;
+    transform: translateX(-50%) scale(1.1); /* Увеличиваем при наведении */
+    background-color: var(--green-highlight); /* Меняем цвет на зеленый */
+    border-color: var(--dark-bg); /* Темный бордер */
+    box-shadow: 0 0 20px rgba(15, 171, 171, 0.8); /* Яркая тень */
 }
-.timeline-item .circle:active {
-    transform: scale(0.95);
+
+.timeline-item h4 {
+    font-family: var(--font-inter);
+    font-size: 40px;
+    font-weight: 900;
+    color: var(--green-highlight);
+    text-align: center; /* Центрируем текст */
+    width: 100%;
+    margin-top: 20px; /* Отступ от кружка */
 }
-.timeline-item h4 { font-family: var(--font-inter); font-size: 40px; font-weight: 900; color: var(--green-highlight); text-align: left; width: 100%; }
-.timeline-item p { font-family: var(--font-inter); font-size: 32px; font-weight: 400; color: var(--timeline-text-color); text-align: left; width: 100%; line-height: 1.2; }
+.timeline-item p {
+    font-family: var(--font-inter);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--timeline-text-color);
+    text-align: center; /* Центрируем текст */
+    width: 100%;
+    line-height: 1.2;
+    margin-top: 10px; /* Отступ от заголовка */
+
+    /* Для скрытия/отображения подробностей на десктопе */
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease-out, opacity 0.4s ease-out;
+}
+
+.timeline-item.active p {
+    max-height: 150px; /* Достаточное значение для отображения текста */
+    opacity: 1;
+}
+
+
+/* Ключевые кадры для анимации пульсации */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(15, 171, 171, 0.4); }
+    70% { box-shadow: 0 0 0 20px rgba(15, 171, 171, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(15, 171, 171, 0); }
+}
 
 /* Mobile Roadmap Styles */
 .mobile-roadmap-wrapper {
@@ -528,9 +641,10 @@ body {
     /* Показываем вертикальный роадмап */
     .mobile-roadmap-wrapper { display: block; }
 
-    .timeline-item { width: 150px; } /* Этот блок теперь не будет использоваться */
-    .timeline-item h4 { font-size: 32px; } /* Этот блок теперь не будет использоваться */
-    .timeline-item p { font-size: 24px; } /* Этот блок теперь не будет использоваться */
+    /* Эти стили для timeline-item теперь не будут использоваться на мобильных, но оставляю их на всякий случай, если будут конфликты */
+    .timeline-item { width: 150px; }
+    .timeline-item h4 { font-size: 32px; }
+    .timeline-item p { font-size: 24px; }
     .testimonial-grid { grid-template-columns: 1fr; }
     .faq-container { flex-direction: column; align-items: center; }
     .faq-image-placeholder, .faq-content { width: 100%; }
@@ -596,15 +710,8 @@ body {
     .mobile-roadmap-point { left: 20px; }
     .mobile-roadmap-item { padding-left: 60px; }
     .mobile-roadmap-header h4 { font-size: 24px; }
-    /* Убираем стили для .plus из адаптива, так как его больше нет */
-    /* .mobile-roadmap-header .plus { width: 16px; height: 16px; } */
     .mobile-roadmap-details p { font-size: 14px; }
 
-
-    .timeline { flex-direction: column; align-items: center; } /* Этот блок теперь не будет использоваться */
-    .timeline-item { width: 100%; max-width: 250px; margin-bottom: 30px; } /* Этот блок теперь не будет использоваться */
-    .timeline-item .circle { width: 50px; height: 50px; border-width: 18px; } /* Этот блок теперь не будет использоваться */
-    .timeline-background { display: none; } /* Скрываем волну на мобильных */
     .testimonials-section { padding: 50px 20px; }
     .testimonials-section h2 { font-size: 30px; margin-bottom: 40px; }
     .testimonial-item { padding: 20px; }
