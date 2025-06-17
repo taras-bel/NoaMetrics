@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrations - NoaMetrics</title>
+    <link rel="stylesheet" href="vars.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;600;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-wrapper">
+        <div id="header-placeholder"></div>
+
+        <section class="container" style="padding: 100px 20px; text-align: center; min-height: 500px;">
+            <h1 style="font-family: var(--font-poppins); font-size: 48px; margin-bottom: 30px;">Integrations</h1>
+            <p style="font-family: var(--font-open-sans); font-size: 20px; color: var(--secondary-text-color);">
+                Мы работаем над бесшовной интеграцией с вашими любимыми инструментами.
+            </p>
+            <p style="font-family: var(--font-open-sans); font-size: 16px; color: var(--customer-text-color); margin-top: 20px;">
+                Подробности скоро!
+            </p>
+        </section>
+
+        <div id="footer-placeholder"></div>
+    </div>
+
+    <div id="betaFormModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Join Our Beta Program</h2>
+            <form id="betaForm">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="notifications" name="notifications">
+                    <label for="notifications">Send me notifications and updates</label>
+                </div>
+                <button type="submit" class="button">Submit</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

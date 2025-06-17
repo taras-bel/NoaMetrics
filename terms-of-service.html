@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - NoaMetrics</title>
+    <link rel="stylesheet" href="vars.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;600;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-wrapper">
+        <div id="header-placeholder"></div>
+
+        <section class="container" style="padding: 100px 20px; min-height: 500px;">
+            <h1 style="font-family: var(--font-poppins); font-size: 48px; margin-bottom: 30px; text-align: center;">Terms of Service</h1>
+            <p style="font-family: var(--font-open-sans); font-size: 16px; color: var(--secondary-text-color); line-height: 1.6;">
+                Добро пожаловать в NoaMetrics! Эти Условия обслуживания («Условия», «Условия обслуживания») регулируют ваше использование нашего веб-сайта, расположенного по адресу [Ваш домен].
+            </p>
+            <h2 style="font-family: var(--font-poppins); font-size: 28px; margin-top: 40px; margin-bottom: 20px;">Принятие Условий</h2>
+            <p style="font-family: var(--font-open-sans); font-size: 16px; color: var(--secondary-text-color); line-height: 1.6;">
+                Получая доступ или используя Сервис, вы соглашаетесь соблюдать настоящие Условия. Если вы не согласны с какой-либо частью условий, вы не можете получить доступ к Сервису.
+            </p>
+            <h2 style="font-family: var(--font-poppins); font-size: 28px; margin-top: 40px; margin-bottom: 20px;">Изменения</h2>
+            <p style="font-family: var(--font-open-sans); font-size: 16px; color: var(--secondary-text-color); line-height: 1.6;">
+                Мы оставляем за собой право по собственному усмотрению изменять или заменять настоящие Условия в любое время. Если изменение является существенным, мы постараемся уведомить вас не менее чем за 30 дней до вступления в силу каких-либо новых условий. То, что составляет существенное изменение, будет определяться по нашему собственному усмотрению.
+            </p>
+            <p style="font-family: var(--font-open-sans); font-size: 16px; color: var(--customer-text-color); margin-top: 20px;">
+                Эта страница находится в разработке и будет обновлена с более подробной информацией.
+            </p>
+        </section>
+
+        <div id="footer-placeholder"></div>
+    </div>
+
+    <div id="betaFormModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Join Our Beta Program</h2>
+            <form id="betaForm">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="notifications" name="notifications">
+                    <label for="notifications">Send me notifications and updates</label>
+                </div>
+                <button type="submit" class="button">Submit</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

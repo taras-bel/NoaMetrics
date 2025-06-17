@@ -86,7 +86,16 @@ body {
 .main-nav a { color: var(--primary-text-color); font-family: var(--font-open-sans); font-weight: 600; font-size: 16px; transition: color 0.3s ease; }
 .main-nav a:hover { color: var(--green-highlight); }
 .main-header .scan-cv-btn { padding: 15px 8px; width: 162px; font-size: 16px; flex-shrink: 0; }
-.menu-toggle { display: none; font-size: 2rem; color: var(--primary-text-color); }
+.menu-toggle {
+    display: none;
+    font-size: 2rem;
+    color: var(--primary-text-color); /* Изначальный цвет */
+    transition: color 0.3s ease; /* Плавное изменение цвета */
+}
+.menu-toggle:hover {
+    color: var(--green-highlight); /* Цвет при наведении */
+}
+
 .nav-link-button { padding: 8px 16px; border: 1px solid var(--dark-bg); border-radius: 4px; }
 .nav-link-button:hover { background: var(--dark-bg); color: var(--white); border-color: var(--dark-bg); }
 .main-nav-overlay { display: none; }
@@ -179,9 +188,137 @@ body {
 .timeline-background { position: absolute; top: 50%; left: 0; width: 100%; height: 55px; transform: translateY(-50%); z-index: 0; object-fit: cover; }
 .timeline { position: relative; z-index: 1; display: flex; justify-content: space-around; align-items: flex-start; }
 .timeline-item { display: flex; flex-direction: column; align-items: center; width: 180px; }
-.timeline-item .circle { width: 67px; height: 67px; background-color: var(--timeline-dot-bg); border: 24px solid var(--green-highlight); border-radius: 50%; margin-bottom: 25px; }
+.timeline-item .circle {
+    width: 67px;
+    height: 67px;
+    background-color: var(--timeline-dot-bg);
+    border: 24px solid var(--green-highlight);
+    border-radius: 50%;
+    margin-bottom: 25px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.timeline-item .circle:hover {
+    transform: scale(1.1);
+    background-color: darken(var(--timeline-dot-bg), 10%); /* Просто для примера, использовать CSS-переменную или явный цвет */
+}
+.timeline-item .circle:active {
+    transform: scale(0.95);
+}
 .timeline-item h4 { font-family: var(--font-inter); font-size: 40px; font-weight: 900; color: var(--green-highlight); text-align: left; width: 100%; }
 .timeline-item p { font-family: var(--font-inter); font-size: 32px; font-weight: 400; color: var(--timeline-text-color); text-align: left; width: 100%; line-height: 1.2; }
+
+/* Mobile Roadmap Styles */
+.mobile-roadmap-wrapper {
+    display: none; /* Скрыто по умолчанию для десктопа */
+    position: relative;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+.mobile-roadmap-line {
+    position: absolute;
+    left: 48px; /* Выравнивание линии со точками */
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--green-highlight);
+    z-index: 0;
+}
+.mobile-roadmap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Выравнивание по левому краю */
+    position: relative;
+    z-index: 1;
+}
+.mobile-roadmap-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 80px; /* Отступ для контента от линии */
+    position: relative;
+    width: 100%;
+    margin-bottom: 30px;
+    /* Анимация при появлении */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.mobile-roadmap-item.revealed { /* Класс для элементов, которые должны появиться */
+    opacity: 1;
+    transform: translateY(0);
+}
+.mobile-roadmap-item:last-child {
+    margin-bottom: 0;
+}
+.mobile-roadmap-point {
+    width: 30px;
+    height: 30px;
+    background-color: var(--timeline-dot-bg);
+    border: 8px solid var(--green-highlight);
+    border-radius: 50%;
+    position: absolute;
+    left: 35px; /* Выравнивание точки по линии */
+    top: 0;
+    transform: translateX(-50%);
+    cursor: pointer;
+    transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+.mobile-roadmap-point:hover {
+    transform: translateX(-50%) scale(1.2);
+    background-color: var(--green-highlight); /* Точка становится бирюзовой */
+    box-shadow: 0 0 15px rgba(15, 171, 171, 0.6); /* Красивая тень */
+}
+.mobile-roadmap-point:active {
+    transform: translateX(-50%) scale(0.9);
+    background-color: var(--dark-bg); /* Темнее при нажатии */
+    box-shadow: none;
+}
+
+.mobile-roadmap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.mobile-roadmap-header h4 {
+    font-family: var(--font-inter);
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--green-highlight);
+    white-space: nowrap;
+}
+/* Убираем стили для .plus, так как его больше нет */
+/* .mobile-roadmap-header .plus {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+.mobile-roadmap-item.active .mobile-roadmap-header .plus {
+    transform: rotate(45deg);
+} */
+
+.mobile-roadmap-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, opacity 0.3s ease-out; /* Увеличим время transition для плавности */
+    opacity: 0; /* Изначально прозрачный */
+    width: 100%;
+}
+.mobile-roadmap-item.active .mobile-roadmap-details {
+    opacity: 1; /* Показываем текст при активации */
+}
+.mobile-roadmap-details p {
+    font-family: var(--font-open-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--secondary-text-color);
+    padding-top: 5px; /* Отступ сверху для текста */
+}
+
 
 /* Testimonials Section */
 .testimonials-section { padding: 80px 20px; text-align: center; }
@@ -386,9 +523,14 @@ body {
     .features-grid { grid-template-columns: repeat(2, 1fr); }
     .large-cta-button { width: 100%; max-width: 450px; }
     .benefits-section { grid-template-columns: 1fr; }
-    .timeline-item { width: 150px; }
-    .timeline-item h4 { font-size: 32px; }
-    .timeline-item p { font-size: 24px; }
+    /* Скрываем горизонтальный роадмап на меньших экранах */
+    .timeline-wrapper { display: none; }
+    /* Показываем вертикальный роадмап */
+    .mobile-roadmap-wrapper { display: block; }
+
+    .timeline-item { width: 150px; } /* Этот блок теперь не будет использоваться */
+    .timeline-item h4 { font-size: 32px; } /* Этот блок теперь не будет использоваться */
+    .timeline-item p { font-size: 24px; } /* Этот блок теперь не будет использоваться */
     .testimonial-grid { grid-template-columns: 1fr; }
     .faq-container { flex-direction: column; align-items: center; }
     .faq-image-placeholder, .faq-content { width: 100%; }
@@ -449,9 +591,19 @@ body {
     .benefit-item p { font-size: 24px; }
     .product-roadmap { padding: 50px 20px; }
     .product-roadmap h2 { font-size: 30px; margin-bottom: 60px; }
-    .timeline { flex-direction: column; align-items: center; }
-    .timeline-item { width: 100%; max-width: 250px; margin-bottom: 30px; }
-    .timeline-item .circle { width: 50px; height: 50px; border-width: 18px; }
+    /* Mobile Roadmap adjustments */
+    .mobile-roadmap-line { left: 20px; }
+    .mobile-roadmap-point { left: 20px; }
+    .mobile-roadmap-item { padding-left: 60px; }
+    .mobile-roadmap-header h4 { font-size: 24px; }
+    /* Убираем стили для .plus из адаптива, так как его больше нет */
+    /* .mobile-roadmap-header .plus { width: 16px; height: 16px; } */
+    .mobile-roadmap-details p { font-size: 14px; }
+
+
+    .timeline { flex-direction: column; align-items: center; } /* Этот блок теперь не будет использоваться */
+    .timeline-item { width: 100%; max-width: 250px; margin-bottom: 30px; } /* Этот блок теперь не будет использоваться */
+    .timeline-item .circle { width: 50px; height: 50px; border-width: 18px; } /* Этот блок теперь не будет использоваться */
     .timeline-background { display: none; } /* Скрываем волну на мобильных */
     .testimonials-section { padding: 50px 20px; }
     .testimonials-section h2 { font-size: 30px; margin-bottom: 40px; }
@@ -497,8 +649,8 @@ body {
     .info-block p { font-size: 20px; }
     .benefit-item p { font-size: 20px; }
     .product-roadmap h2 { font-size: 24px; }
-    .timeline-item h4 { font-size: 28px; }
-    .timeline-item p { font-size: 20px; }
+    .mobile-roadmap-header h4 { font-size: 20px; } /* Уменьшаем размер шрифта для мобильного роадмапа */
+    .mobile-roadmap-details p { font-size: 12px; } /* Уменьшаем размер шрифта для деталей */
     .testimonials-section h2 { font-size: 24px; }
     .cta-content h2 { font-size: 24px; }
     .cta-content p { font-size: 16px; }
