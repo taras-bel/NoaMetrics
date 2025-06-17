@@ -7,25 +7,35 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const response = await fetch(templatePath);
                 if (!response.ok) {
+                    // Если запрос не успешен (например, 404 Not Found)
+                    console.error(`Ошибка HTTP при загрузке шаблона ${templatePath}: статус ${response.status}`);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const html = await response.text();
                 placeholder.innerHTML = html;
+                console.log(`Шаблон ${templatePath} успешно загружен.`); // Для отладки
             } catch (error) {
-                console.error(`Error loading template ${templatePath}:`, error);
-                // Можно добавить резервный контент или сообщение об ошибке
-                placeholder.innerHTML = `<p style="color: red;">Failed to load ${templatePath}</p>`;
+                console.error(`Ошибка при загрузке шаблона ${templatePath}:`, error);
+                placeholder.innerHTML = `<p style="color: red; text-align: center; padding: 20px;">Не удалось загрузить ${templatePath}. Проверьте путь и наличие файла.</p>`;
             }
+        } else {
+            console.warn(`Плейсхолдер с ID "${placeholderId}" не найден.`); // Для отладки
         }
     }
 
     // Загружаем Header и Footer
     loadTemplate('header-placeholder', 'header-template.html')
         .then(() => {
-            // После загрузки header, инициализируем его скрипты
             initializeHeaderScripts();
+        })
+        .catch(error => {
+            console.error("Ошибка при инициализации скриптов хедера:", error);
         });
-    loadTemplate('footer-placeholder', 'footer-template.html');
+
+    loadTemplate('footer-placeholder', 'footer-template.html')
+        .catch(error => {
+            console.error("Ошибка при загрузке футера:", error);
+        });
 
 
     // -------------------- 1. Мобильное меню (теперь функция, вызываемая после загрузки header) --------------------
@@ -107,17 +117,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-    // initializeModal() вызывается из initializeHeaderScripts после загрузки хедера
 
     // -------------------- 3. Аккордеон для FAQ --------------------
-    // Убедимся, что FAQ-элементы существуют на текущей странице
     if (document.querySelector('.faq-question')) {
         document.querySelectorAll('.faq-question').forEach(item => {
             item.addEventListener('click', () => {
                 const faqItem = item.parentElement;
                 const answer = item.nextElementSibling;
                 const plusIcon = item.querySelector('.plus');
-                
+
                 const wasActive = faqItem.classList.contains('active');
 
                 document.querySelectorAll('.faq-item').forEach(el => {
@@ -127,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         el.querySelector('.faq-question .plus').style.transform = 'rotate(0deg)';
                     }
                 });
-                
+
                 if (!wasActive) {
                     faqItem.classList.add('active');
                     answer.style.maxHeight = answer.scrollHeight + 'px';
@@ -143,16 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // -------------------- 4. Аккордеон для Мобильного Роадмапа --------------------
-    // Убедимся, что элементы роадмапа существуют на текущей странице
     if (document.querySelector('.mobile-roadmap-item')) {
         document.querySelectorAll('.mobile-roadmap-item').forEach(item => {
             item.addEventListener('click', (event) => {
-                if (event.target.classList.contains('mobile-roadmap-point') || event.target.tagName === 'H4') {
-                    // Это OK
-                } else {
-                    return; // Игнорируем клики, если это не точка или заголовок
-                }
-
                 const mobileRoadmapItem = item;
                 const details = mobileRoadmapItem.querySelector('.mobile-roadmap-details');
                 
@@ -168,22 +169,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (!wasActive) {
                     mobileRoadmapItem.classList.add('active');
-                    details.style.maxHeight = details.scrollHeight + 'px';
                     details.style.opacity = '1';
+                    details.style.maxHeight = details.scrollHeight + 'px';
                 } else {
                     mobileRoadmapItem.classList.remove('active');
-                    details.style.maxHeight = '0';
                     details.style.opacity = '0';
+                    details.style.maxHeight = '0';
                 }
             });
         });
     }
 
     // -------------------- 5. Анимация появления элементов мобильного роадмапа при скролле --------------------
-    const roadmapItems = document.querySelectorAll('.mobile-roadmap-item');
+    const roadmapItemsMobile = document.querySelectorAll('.mobile-roadmap-item');
 
-    // Применяем IntersectionObserver только если есть элементы роадмапа
-    if (roadmapItems.length > 0) {
+    if (roadmapItemsMobile.length > 0) {
         const observerOptions = {
             root: null,
             rootMargin: '0px',
@@ -201,16 +201,73 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }, observerOptions);
 
-        roadmapItems.forEach(item => {
+        roadmapItemsMobile.forEach(item => {
             observer.observe(item);
+        });
+    }
+
+    // -------------------- НОВЫЕ АНИМАЦИИ И ЛОГИКА ДЛЯ ДЕСКТОПНОГО РОАДМАПА --------------------
+    const roadmapItemsDesktop = document.querySelectorAll('.timeline-item');
+
+    if (roadmapItemsDesktop.length > 0) {
+        // Логика аккордеона для десктопного роадмапа
+        roadmapItemsDesktop.forEach(item => {
+            item.addEventListener('click', () => {
+                const detailsParagraph = item.querySelector('p'); // Находим параграф с деталями
+                const wasActive = item.classList.contains('active');
+
+                // Закрываем все остальные открытые элементы
+                roadmapItemsDesktop.forEach(el => {
+                    if (el !== item && el.classList.contains('active')) {
+                        el.classList.remove('active');
+                        el.querySelector('p').style.maxHeight = '0';
+                        el.querySelector('p').style.opacity = '0';
+                    }
+                });
+
+                // Переключаем активность текущего элемента
+                if (!wasActive) {
+                    item.classList.add('active');
+                    detailsParagraph.style.maxHeight = detailsParagraph.scrollHeight + 'px';
+                    detailsParagraph.style.opacity = '1';
+                } else {
+                    item.classList.remove('active');
+                    detailsParagraph.style.maxHeight = '0';
+                    detailsParagraph.style.opacity = '0';
+                }
+            });
+        });
+
+        // Анимация появления элементов десктопного роадмапа при скролле
+        const observerOptionsDesktop = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.3 // Можно регулировать порог видимости
+        };
+
+        const observerDesktop = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    // Добавляем задержку для каждого элемента
+                    setTimeout(() => {
+                        entry.target.classList.add('revealed');
+                    }, index * 150); // Задержка 150мс на каждый элемент
+                    // observer.unobserve(entry.target); // Отключить, если нужно, чтобы анимация срабатывала только один раз
+                } else {
+                    // entry.target.classList.remove('revealed'); // Раскомментировать, если нужно, чтобы исчезали при прокрутке вверх
+                }
+            });
+        }, observerOptionsDesktop);
+
+        roadmapItemsDesktop.forEach(item => {
+            observerDesktop.observe(item);
         });
     }
 
 
     // -------------------- 6. Логика Drag and Drop для загрузки файлов (с анимацией) --------------------
-    // Убедимся, что секция загрузки файлов существует на текущей странице
     const uploadArea = document.getElementById('uploadArea');
-    if (uploadArea) { // Проверяем существование uploadArea перед инициализацией
+    if (uploadArea) {
         const uploadButton = document.getElementById('uploadButton');
         const fileInput = document.getElementById('fileInput');
         const fileList = document.getElementById('fileList');
@@ -225,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInput.addEventListener('change', () => {
             handleFiles(fileInput.files);
         });
-        
+
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             uploadArea.addEventListener(eventName, preventDefaults, false);
         });
@@ -292,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             fileList.appendChild(fileItem);
                         }
                         alert(`${totalFiles} file(s) successfully processed.`);
-                        
+
                         setTimeout(() => {
                             uploadProgressContainer.style.display = 'none';
                             uploadStatusText.style.display = 'none';
