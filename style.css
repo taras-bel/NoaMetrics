@@ -225,6 +225,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    margin-bottom: 80px; /* Added margin to push content below */
 }
 
 .timeline {
@@ -243,7 +244,7 @@ body {
 .timeline:before {
     content: '';
     position: absolute;
-    top: 39.5px; /* (67px circle / 2) + 8px border - (4px line / 2) */
+    top: 32px; /* ИЗМЕНЕНО */
     left: 0;
     right: 12px; /* Оставляем место для стрелки (12px) */
     height: 4px; /* Высота линии */
@@ -259,7 +260,7 @@ body {
     content: '';
     position: absolute;
     right: 0; /* Позиционируем стрелку в самом конце */
-    top: calc(39.5px - 7px); /* Выравниваем по центру линии (высота стрелки 14px) */
+    top: calc(33.5px - 7px); /* ИЗМЕНЕНО */
     width: 0;
     height: 0;
     border-style: solid;
@@ -791,6 +792,11 @@ body {
     .social-links ul {
         justify-content: flex-end;
     }
+    .footer-logo-info {
+        text-align: left;
+        flex-basis: auto;
+        order: 2;
+    }
 }
 
 
@@ -1013,7 +1019,7 @@ body {
     .cta-content p { font-size: 18px; }
     .cta-button { width: 100%; max-width: 300px; }
 
-    /* FOOTER for Mobile phones */
+    /* Footer for Mobile phones */
     .main-footer { padding: 40px 20px; }
     .footer-container {
         flex-direction: column;
