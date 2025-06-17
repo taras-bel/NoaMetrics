@@ -800,8 +800,167 @@ body {
 }
 
 
+/* NEW Media Query for Horizontal Tablets & Asus Zenbook Fold (unfolded) */
+@media (min-width: 769px) and (max-width: 1200px) {
+    .container {
+        padding: 0 30px;
+    }
+    .main-header {
+        padding: 20px 30px;
+    }
+    .main-header .logo .nav-link {
+        font-size: 36px; /* Slightly smaller logo text */
+    }
+    .main-header .logo .your-logo-here {
+        width: 65px;
+        height: 65px;
+    }
+
+    /* Ensure main navigation is visible and behaves like desktop, but adjusted */
+    .main-nav {
+        position: static; /* Override fixed/absolute from mobile */
+        right: auto;
+        width: auto;
+        height: auto;
+        background-color: transparent;
+        flex-direction: row; /* Ensure it's a row */
+        justify-content: flex-end; /* Align links to the right */
+        box-shadow: none;
+        padding-top: 0;
+        transition: none; /* Disable mobile transition */
+        z-index: auto;
+        display: block; /* Ensure it's not hidden by mobile styles */
+    }
+    .main-nav ul {
+        display: flex;
+        gap: 30px; /* Adjust gap for these devices */
+        align-items: center;
+        width: auto;
+        text-align: left;
+        flex-wrap: wrap; /* Allow links to wrap if space is tight */
+    }
+    .main-nav a {
+        font-size: 16px; /* Standard text size for nav links */
+        white-space: nowrap; /* Prevent breaking nav links */
+    }
+    .main-header .scan-cv-btn {
+        padding: 12px 18px; /* Slightly smaller button padding */
+        width: auto; /* Auto width */
+        font-size: 15px; /* Smaller font size */
+        flex-shrink: 0;
+        display: inline-flex; /* Ensure it's visible */
+    }
+
+    /* Hide mobile specific elements */
+    .menu-toggle {
+        display: none;
+    }
+    .main-nav-overlay {
+        display: none;
+    }
+
+    /* Adjust hero section and other content */
+    .hero-section { padding: 80px 30px; min-height: 400px; }
+    .hero-content h1 { font-size: 48px; }
+    .hero-content p { font-size: 20px; }
+    .hero-buttons .button { width: 320px; height: 55px; font-size: 18px; }
+
+    .featured-in-section, .problem-statement, .upload-promo-section,
+    .features-overview, .benefits-section, .product-roadmap,
+    .testimonials-section, .faq-section-wrapper, .cta-section {
+        padding: 80px 30px;
+    }
+
+    .problem-stats { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+    .stat-item p { font-size: 16px; }
+
+    .upload-promo-section { flex-direction: row; align-items: flex-start; }
+    .promo-text, .upload-area { width: 50%; max-width: none; } /* Revert to side-by-side */
+    .promo-text h2 { font-size: 36px; }
+    .promo-text .subtitle { font-size: 20px; }
+    .promo-text h3 { font-size: 30px; }
+    .benefit-item-list p { font-size: 20px; }
+    .upload-area p { font-size: 30px; }
+    .upload-area .small-text { font-size: 20px; }
+
+    .features-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+    .info-block p { font-size: 20px; }
+    .large-cta-button { width: 100%; max-width: 500px; }
+
+    .benefits-section { grid-template-columns: repeat(2, 1fr); } /* Revert to 2 columns */
+    .benefit-item p { font-size: 28px; }
+
+    .timeline-wrapper { display: flex; } /* Revert to desktop timeline */
+    .mobile-roadmap-wrapper { display: none; }
+    .product-roadmap h2 { font-size: 36px; margin-bottom: 50px; }
+    .timeline-item h4 { font-size: 36px; }
+    .timeline-item p { font-size: 24px; }
+    .timeline-item .circle {
+        width: 55px; /* Slightly smaller circles */
+        height: 55px;
+        border-width: 7px; /* Adjust border */
+    }
+    .timeline:before {
+        left: 30px;
+        right: calc(30px + 12px);
+    }
+    .timeline:after {
+        right: 30px;
+    }
+
+
+    .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
+    .testimonials-section h2 { font-size: 36px; margin-bottom: 50px; }
+
+    .faq-container { flex-direction: row; align-items: flex-start; }
+    .faq-image-placeholder, .faq-content { width: 50%; max-width: none; } /* Revert to side-by-side */
+    .faq-content h2 { font-size: 28px; margin-bottom: 25px; }
+    .faq-question { font-size: 15px; }
+    .faq-answer p { font-size: 14px; }
+
+    .cta-content { padding: 60px; }
+    .cta-content h2 { font-size: 40px; }
+    .cta-content p { font-size: 20px; }
+    .cta-button { width: 320px; height: 55px; font-size: 18px; }
+
+    /* FOOTER for this specific range */
+    .main-footer { padding: 50px 30px; }
+    .footer-container {
+        flex-direction: row; /* Keep as row */
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 30px;
+    }
+    .footer-links-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        width: auto;
+        justify-items: center;
+        text-align: center;
+        order: 1; /* Keep desktop order */
+    }
+    .social-links {
+        order: 2; /* Keep desktop order */
+        margin-left: auto;
+        width: auto;
+        text-align: right;
+    }
+    .social-links h3 { text-align: right; }
+    .social-links ul {
+        justify-content: flex-end;
+    }
+    .footer-logo-info {
+        text-align: left;
+        flex-basis: auto;
+        order: 0; /* Keep desktop order */
+    }
+}
+
+
 /* Адаптация для ПЛАНШЕТОВ (769px - 1024px) - вертикальная ориентация */
-@media (min-width: 769px) and (max-width: 1024px) {
+/* Этот медиазапрос теперь будет применяться только к вертикальным планшетам,
+   так как горизонтальные будут охватываться новым медиазапросом выше. */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
     .container {
         padding: 0 30px;
     }
@@ -963,7 +1122,7 @@ body {
     .menu-toggle {
         display: block;
         margin-left: 20px;
-        color: var(--white);
+        color: var(--primary-text-color); /* Adjusted for better visibility */
     }
     .main-header .scan-cv-btn { display: none; }
     .main-nav-overlay {
