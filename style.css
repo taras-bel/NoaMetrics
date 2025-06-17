@@ -369,7 +369,7 @@ body {
 /* Линия таймлайна для мобильных устройств */
 .mobile-roadmap-line {
     position: absolute;
-    left: 14px; /* Сдвиг на 2px правее от исходного 12px */
+    left: 13px; /* Сдвиг на 1px влево (14px - 1px) */
     top: 0;
     bottom: 0; /* Линия идет до самого низа */
     width: 4px;
@@ -383,7 +383,7 @@ body {
 .mobile-roadmap-line:after {
     content: '';
     position: absolute;
-    bottom: 12px; /* Изменено: Перемещено вверх на 12px, чтобы основание совпадало с концом линии */
+    bottom: -5px; /* Изменено: Перемещено на 5px ниже конца линии */
     left: calc(50%); /* Центрирование стрелки на линии */
     transform: translateX(-50%); /* Точное центрирование стрелки на линии */
     width: 0;
