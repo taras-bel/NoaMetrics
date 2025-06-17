@@ -354,10 +354,11 @@ body {
 }
 .mobile-roadmap-line {
     position: absolute;
-    left: calc(30px / 2 + 8px); /* Высота круга / 2 + border круга */
+    /* Corrected calculation for line to pass through center of mobile dots */
+    left: calc(20px + 2px); /* 20px from left padding (default), 2px for half line width (4px line) */
     top: 0;
     bottom: 0;
-    width: 2px;
+    width: 4px; /* Line width, ensure consistency */
     background-color: var(--green-highlight);
     z-index: 0;
 }
@@ -386,7 +387,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding-left: 80px;
+    /* Adjust padding-left based on new line position */
+    padding-left: calc(20px + 4px + 30px); /* 20px (line offset) + 4px (line width) + 30px (spacing) */
     position: relative;
     width: 100%;
     margin-bottom: 30px;
@@ -408,9 +410,10 @@ body {
     border: 8px solid var(--green-highlight);
     border-radius: 50%;
     position: absolute;
-    left: calc(30px / 2 + 8px - 15px); /* Центрирование точки относительно линии */
+    /* Corrected calculation for point to center on the line */
+    left: calc(20px + 2px); /* 20px (line offset) + 2px (half line width) */
     top: 0;
-    transform: translateX(-50%);
+    transform: translateX(-50%); /* Pull back by half its own width */
     cursor: pointer;
     transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
@@ -553,10 +556,10 @@ body {
 .footer-links-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* Default 3 columns */
-    gap: 30px; /* Default gap */
+    gap: 20px; /* Default reduced gap */
     flex-grow: 1;
     order: 1;
-    justify-items: center; /* Center items in grid cells */
+    justify-items: center; /* Center entire columns within the grid area */
     text-align: center; /* Center text within each item */
 }
 .footer-column {
@@ -744,21 +747,21 @@ body {
     }
     .footer-logo-info {
         flex-basis: 250px;
-        text-align: left; /* Logo info remains left-aligned */
+        text-align: left;
         order: 0;
     }
     .footer-links-grid {
         grid-template-columns: repeat(3, 1fr);
-        gap: 20px; /* Reduced gap */
+        gap: 20px;
         flex-grow: 1;
-        justify-items: center; /* Center entire columns within the grid area */
-        text-align: center; /* Center text within each footer column */
+        justify-items: center;
+        text-align: center;
         order: 1;
     }
     .social-links {
         order: 2;
         margin-left: auto;
-        text-align: right; /* Social links remain right-aligned */
+        text-align: right;
     }
     .social-links h3 { text-align: right; }
     .social-links ul {
@@ -808,7 +811,7 @@ body {
     .product-roadmap h2 { font-size: 36px; margin-bottom: 50px; }
 
     .mobile-roadmap-line {
-        left: calc(30px / 2 + 8px);
+        left: calc(20px + 2px); /* Use consistent base for line from the general .container padding */
     }
     .mobile-roadmap-line:after {
         content: '';
@@ -818,7 +821,10 @@ body {
         border-color: var(--green-highlight) transparent transparent transparent;
     }
     .mobile-roadmap-point {
-        left: calc(30px / 2 + 8px - 15px);
+        left: calc(20px + 2px); /* Point also aligns with the line */
+    }
+    .mobile-roadmap-item {
+        padding-left: calc(20px + 4px + 30px); /* Adjust padding for text */
     }
 
 
@@ -849,25 +855,25 @@ body {
         gap: 30px;
     }
     .footer-links-grid {
-        grid-template-columns: repeat(3, 1fr); /* Try to keep 3 columns */
-        gap: 20px; /* Reduced gap */
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
         width: 100%;
-        justify-items: center; /* Center entire columns */
-        text-align: center; /* Center text within each footer column */
-        order: 0; /* Move to the beginning */
+        justify-items: center;
+        text-align: center;
+        order: 0;
     }
     .social-links {
         order: 1;
         margin-left: 0;
         width: 100%;
-        text-align: center; /* Social links centered */
+        text-align: center;
     }
     .social-links h3 { text-align: center; }
     .social-links ul {
         justify-content: center;
     }
     .footer-logo-info {
-        text-align: center; /* Logo info centered */
+        text-align: center;
         flex-basis: auto;
         order: 2;
     }
