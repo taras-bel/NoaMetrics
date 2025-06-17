@@ -243,10 +243,11 @@ body {
 .timeline:before {
     content: '';
     position: absolute;
-    top: calc(67px / 2 + 8px); /* Высота круга / 2 + border круга */
+    /* (circle_height / 2) + circle_border_width - (line_height / 2) */
+    top: calc((67px / 2) + 8px - (4px / 2));
     left: 0;
     right: 0;
-    height: 4px;
+    height: 4px; /* Line height */
     background: var(--green-highlight);
     z-index: -1;
 }
@@ -256,7 +257,7 @@ body {
     content: '';
     position: absolute;
     right: 0;
-    top: calc(67px / 2 + 8px - 7px); /* Align with the line, minus half arrow height */
+    top: calc((67px / 2) + 8px - 7px); /* Align with the line, minus half arrow height */
     width: 0;
     height: 0;
     border-style: solid;
@@ -349,16 +350,16 @@ body {
 .mobile-roadmap-wrapper {
     display: none;
     position: relative;
-    padding: 20px 0;
+    padding: 20px 0; /* Use container padding for the overall left spacing */
     margin-top: 40px;
 }
 .mobile-roadmap-line {
     position: absolute;
-    /* Corrected calculation for line to pass through center of mobile dots */
-    left: calc(20px + 2px); /* 20px from left padding (default), 2px for half line width (4px line) */
+    /* (circle_width / 2) + circle_border_width - (line_width / 2) */
+    left: calc((30px / 2) + 8px - (4px / 2)); /* This should be constant */
     top: 0;
     bottom: 0;
-    width: 4px; /* Line width, ensure consistency */
+    width: 4px;
     background-color: var(--green-highlight);
     z-index: 0;
 }
@@ -367,7 +368,8 @@ body {
     content: '';
     position: absolute;
     bottom: 0;
-    left: -7px; /* Align with the line, minus half arrow width */
+    left: calc(50% - 7px); /* Center arrow on the 4px line */
+    transform: translateX(-50%); /* Adjust to precisely center */
     width: 0;
     height: 0;
     border-style: solid;
@@ -387,8 +389,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    /* Adjust padding-left based on new line position */
-    padding-left: calc(20px + 4px + 30px); /* 20px (line offset) + 4px (line width) + 30px (spacing) */
+    /* Left padding for text, consider dot size and line position */
+    padding-left: calc( (30px + 8px * 2) + 20px ); /* Total dot width + spacing */
     position: relative;
     width: 100%;
     margin-bottom: 30px;
@@ -410,20 +412,21 @@ body {
     border: 8px solid var(--green-highlight);
     border-radius: 50%;
     position: absolute;
-    /* Corrected calculation for point to center on the line */
-    left: calc(20px + 2px); /* 20px (line offset) + 2px (half line width) */
+    /* Position relative to the timeline line (which is inside mobile-roadmap-wrapper) */
+    left: calc( var(--timeline-line-offset-mobile) - (30px / 2) - 8px ); /* (line left) - (half point width) - (border width) */
     top: 0;
-    transform: translateX(-50%); /* Pull back by half its own width */
+    /* We don't use translateX here because 'left' is calculated precisely */
+    /* transform: translateX(-50%); */ /* This caused issues, remove or recalculate left */
     cursor: pointer;
     transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 .mobile-roadmap-point:hover {
-    transform: translateX(-50%) scale(1.2);
+    transform: scale(1.2); /* Scale only */
     background-color: var(--green-highlight);
     box-shadow: 0 0 15px rgba(15, 171, 171, 0.6);
 }
 .mobile-roadmap-point:active {
-    transform: translateX(-50%) scale(0.9);
+    transform: scale(0.9); /* Scale only */
     background-color: var(--dark-bg);
     box-shadow: none;
 }
@@ -714,18 +717,19 @@ body {
     .timeline:before {
         left: 40px;
         right: 40px;
-        top: calc(67px / 2 + 8px);
+        /* (circle_height / 2) + circle_border_width - (line_height / 2) */
+        top: calc((67px / 2) + 8px - (4px / 2));
     }
     .timeline:after {
         right: 40px;
-        top: calc(67px / 2 + 8px - 7px);
+        top: calc((67px / 2) + 8px - 7px);
     }
     .timeline-item h4 { font-size: 44px; }
     .timeline-item p { font-size: 28px; }
     .timeline-item .circle {
-        width: 75px;
-        height: 75px;
-        border-width: 10px;
+        width: 67px;
+        height: 67px;
+        border-width: 8px; /* Consistent border-width */
     }
 
     .problem-stats { grid-template-columns: repeat(3, 1fr); gap: 40px; }
@@ -810,25 +814,28 @@ body {
     .mobile-roadmap-wrapper { display: block; }
     .product-roadmap h2 { font-size: 36px; margin-bottom: 50px; }
 
+    /* For consistency, define the line offset in a variable if needed, or calculate relative to item */
     .mobile-roadmap-line {
-        left: calc(20px + 2px); /* Use consistent base for line from the general .container padding */
+        /* (dot_width / 2) + dot_border_width - (line_width / 2) */
+        left: calc((30px / 2) + 8px - (4px / 2));
     }
     .mobile-roadmap-line:after {
-        content: '';
-        bottom: 0;
-        left: -7px;
-        border-width: 12px 7px 0 7px;
-        border-color: var(--green-highlight) transparent transparent transparent;
+        left: calc(50% - 7px); /* Center arrow on the 4px line */
+        transform: translateX(-50%);
     }
     .mobile-roadmap-point {
-        left: calc(20px + 2px); /* Point also aligns with the line */
+        /* Position of the dot's top-left corner */
+        left: 0; /* Position the dot relative to its parent .mobile-roadmap-item */
+        /* Translate the dot to the correct horizontal center of the line */
+        transform: translateX(calc( -50% + ((30px / 2) + 8px - (4px / 2)) ));
     }
     .mobile-roadmap-item {
-        padding-left: calc(20px + 4px + 30px); /* Adjust padding for text */
+        /* Padding for text, considering dot size and line position */
+        padding-left: calc( (30px + 8px * 2) + 20px ); /* Total dot width (30 + 16) + spacing */
     }
 
 
-    .mobile-roadmap-item { padding-left: 70px; margin-bottom: 25px; }
+    .mobile-roadmap-item { margin-bottom: 25px; }
     .mobile-roadmap-header h4 { font-size: 28px; }
     .mobile-roadmap-details p { font-size: 15px; }
 
@@ -981,9 +988,24 @@ body {
     .product-roadmap h2 { font-size: 30px; margin-bottom: 60px; }
     .timeline-wrapper { display: none; }
     .mobile-roadmap-wrapper { display: block; }
-    .mobile-roadmap-line { left: 20px; }
-    .mobile-roadmap-point { left: 20px; }
-    .mobile-roadmap-item { padding-left: 60px; }
+    /* Mobile styles for the line and points */
+    .mobile-roadmap-line {
+        /* (dot_width / 2) + dot_border_width - (line_width / 2) */
+        left: calc((30px / 2) + 8px - (4px / 2));
+    }
+    .mobile-roadmap-line:after {
+        left: calc(50% - 7px);
+        transform: translateX(-50%);
+    }
+    .mobile-roadmap-point {
+        left: 0;
+        transform: translateX(calc( -50% + ((30px / 2) + 8px - (4px / 2)) ));
+    }
+    .mobile-roadmap-item {
+        padding-left: calc( (30px + 8px * 2) + 20px ); /* Total dot width (30 + 16) + spacing */
+    }
+
+
     .mobile-roadmap-header h4 { font-size: 24px; }
     .mobile-roadmap-details p { font-size: 14px; }
 
