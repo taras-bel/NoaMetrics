@@ -52,7 +52,7 @@ body {
     color: var(--primary-text-color);
     overflow-x: hidden;
     background: var(--white);
-    min-width: 320px; /* Ensures a minimum width to prevent layout collapse */
+    min-width: 320px;
 }
 .main-wrapper {
     width: 100%;
@@ -81,15 +81,15 @@ body {
 .main-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 20px; position: relative; z-index: 10; }
 .main-header .logo { display: flex; align-items: center; gap: 12px; }
 .main-header .logo .nav-link { color: var(--primary-text-color); font-family: var(--font-open-sans); font-weight: 700; font-size: 40px; white-space: nowrap; }
-.main-header .logo .your-logo-here { width: 70px; height: 70px; object-fit: cover; } /* Adjust size if needed */
+.main-header .logo .your-logo-here { width: 70px; height: 70px; object-fit: cover; }
 .main-nav ul { display: flex; gap: 60px; align-items: center; }
 .main-nav a { color: var(--primary-text-color); font-family: var(--font-open-sans); font-weight: 600; font-size: 16px; transition: color 0.3s ease; }
 .main-nav a:hover { color: var(--green-highlight); }
 .main-header .scan-cv-btn { padding: 15px 8px; width: 162px; font-size: 16px; flex-shrink: 0; }
 .menu-toggle {
-    display: none; /* Hidden by default on larger screens */
+    display: none;
     font-size: 2rem;
-    color: var(--primary-text-color); /* Changed to black for visibility against white header */
+    color: var(--primary-text-color);
     transition: color 0.3s ease;
     cursor: pointer;
 }
@@ -98,7 +98,7 @@ body {
 }
 .nav-link-button { padding: 8px 16px; border: 1px solid var(--dark-bg); border-radius: 4px; }
 .nav-link-button:hover { background: var(--dark-bg); color: var(--white); border-color: var(--dark-bg); }
-.main-nav-overlay { display: none; } /* Hidden by default */
+.main-nav-overlay { display: none; }
 
 /* Hero Section */
 .hero-section {
@@ -110,14 +110,14 @@ body {
     background-image: url('image.png'); /* Placeholder image, replace with actual path */
     background-size: cover;
     background-position: center center;
-    color: var(--white); /* Ensure text is readable on image background */
+    color: var(--white);
 }
 .hero-content {
     max-width: 800px;
     display: flex;
     flex-direction: column;
     gap: 24px;
-    color: var(--white); /* For readability against the image */
+    color: var(--white);
 }
 .hero-content h1 { color: var(--white); font-family: var(--font-poppins); font-weight: 600; font-size: 50px; line-height: 1.4; }
 .hero-content p { color: var(--white); opacity: 0.9; font-family: var(--font-open-sans); font-weight: 400; font-size: 20px; }
@@ -216,19 +216,15 @@ body {
 }
 
 .mobile-roadmap-wrapper {
-    display: none; /* Hidden by default for desktop/horizontal tablet */
+    display: none;
 }
 
 .timeline-wrapper {
     position: relative;
     width: 100%;
-    display: flex; /* Displayed by default for desktop/horizontal tablet */
+    display: flex;
     justify-content: center;
     align-items: flex-start;
-}
-
-.timeline-background {
-    display: none; /* Not defined in provided Figma */
 }
 
 .timeline {
@@ -243,17 +239,32 @@ body {
     padding: 0;
 }
 
-/* Линия таймлайна */
+/* Линия таймлайна для десктопа/горизонтальных планшетов */
 .timeline:before {
     content: '';
     position: absolute;
-    top: 37px;
+    top: calc(67px / 2 + 8px); /* Высота круга / 2 + border круга */
     left: 0;
     right: 0;
     height: 4px;
-    background: var(--timeline-dot-bg);
+    background: var(--green-highlight);
     z-index: -1;
 }
+
+/* Стрелка для десктопа/горизонтальных планшетов */
+.timeline:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: calc(67px / 2 + 8px - 7px); /* Align with the line, minus half arrow height */
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 0 7px 12px; /* Pointing right */
+    border-color: transparent transparent transparent var(--green-highlight);
+    z-index: -1;
+}
+
 
 .timeline-item {
     display: flex;
@@ -324,7 +335,7 @@ body {
 }
 
 .timeline-item.active p {
-    max-height: 150px; /* Adjust as needed for content */
+    max-height: 150px;
     opacity: 1;
 }
 
@@ -336,20 +347,34 @@ body {
 
 /* Mobile Roadmap Styles */
 .mobile-roadmap-wrapper {
-    display: none; /* Hidden by default for desktop/horizontal tablet */
+    display: none;
     position: relative;
     padding: 20px 0;
     margin-top: 40px;
 }
 .mobile-roadmap-line {
     position: absolute;
-    left: 48px; /* Adjusted to align with point */
+    left: calc(30px / 2 + 8px); /* Высота круга / 2 + border круга */
     top: 0;
     bottom: 0;
     width: 2px;
     background-color: var(--green-highlight);
     z-index: 0;
 }
+/* Стрелка для мобильных устройств */
+.mobile-roadmap-line:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -7px; /* Align with the line, minus half arrow width */
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 12px 7px 0 7px; /* Pointing down */
+    border-color: var(--green-highlight) transparent transparent transparent;
+    z-index: 0;
+}
+
 .mobile-roadmap {
     display: flex;
     flex-direction: column;
@@ -383,7 +408,7 @@ body {
     border: 8px solid var(--green-highlight);
     border-radius: 50%;
     position: absolute;
-    left: 35px;
+    left: calc(30px / 2 + 8px - 15px); /* Центрирование точки относительно линии */
     top: 0;
     transform: translateX(-50%);
     cursor: pointer;
@@ -511,7 +536,7 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 30px;
+    gap: 30px; /* Default gap, can be overridden */
 }
 
 .footer-logo-info {
@@ -519,33 +544,37 @@ body {
     flex-direction: column;
     gap: 20px;
     flex-shrink: 0;
-    order: 0; /* Default for desktop/horizontal tablet */
-    text-align: left; /* Default for desktop/horizontal tablet */
+    order: 0;
+    text-align: left; /* Default alignment */
 }
 .footer-logo-info img { width: 70px; height: 70px; object-fit: cover; }
 .footer-logo-info p { font-family: var(--font-open-sans); font-size: 14px; line-height: 1.6; opacity: 0.8; }
 
 .footer-links-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
+    grid-template-columns: repeat(3, 1fr); /* Default 3 columns */
+    gap: 30px; /* Default gap */
     flex-grow: 1;
-    order: 1; /* Default for desktop/horizontal tablet */
-    text-align: left; /* Default for desktop/horizontal tablet */
+    order: 1;
+    justify-items: center; /* Center items in grid cells */
+    text-align: center; /* Center text within each item */
 }
-.footer-column h3 { font-family: var(--font-poppins); font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+.footer-column {
+    text-align: center; /* Ensure text within columns is centered */
+}
+.footer-column h3 { font-family: var(--font-poppins); font-size: 18px; font-weight: 600; margin-bottom: 15px; /* Reduced margin for closer look */ }
 .footer-column ul { list-style: none; padding: 0; }
-.footer-column ul li { margin-bottom: 10px; }
+.footer-column ul li { margin-bottom: 8px; /* Reduced margin for closer links */ }
 .footer-column ul li a { font-family: var(--font-open-sans); font-size: 14px; color: var(--white); opacity: 0.8; transition: opacity 0.3s ease; }
 .footer-column ul li a:hover { opacity: 1; }
 
 .social-links {
-    order: 2; /* Default for desktop/horizontal tablet */
+    order: 2;
     margin-left: auto;
-    text-align: right; /* Default for desktop/horizontal tablet */
+    text-align: right; /* Default alignment */
 }
 .social-links h3 { font-family: var(--font-poppins); font-size: 18px; font-weight: 600; margin-bottom: 20px; }
-.social-links ul { display: flex; gap: 15px; justify-content: flex-end; /* Default for desktop/horizontal tablet */ }
+.social-links ul { display: flex; gap: 15px; justify-content: flex-end; /* Default alignment */ }
 .social-links ul li a img { width: 24px; height: 24px; opacity: 0.8; transition: opacity 0.3s ease; }
 .social-links ul li a img:hover { opacity: 1; }
 
@@ -682,7 +711,11 @@ body {
     .timeline:before {
         left: 40px;
         right: 40px;
-        top: 37px;
+        top: calc(67px / 2 + 8px);
+    }
+    .timeline:after {
+        right: 40px;
+        top: calc(67px / 2 + 8px - 7px);
     }
     .timeline-item h4 { font-size: 44px; }
     .timeline-item p { font-size: 28px; }
@@ -704,28 +737,28 @@ body {
     /* FOOTER for Desktop/Horizontal Tablet */
     .main-footer { padding: 80px 40px; }
     .footer-container {
-        flex-direction: row; /* Horizontal layout */
-        justify-content: space-between; /* Distribute items */
+        flex-direction: row;
+        justify-content: space-between;
         align-items: flex-start;
         gap: 60px;
     }
     .footer-logo-info {
         flex-basis: 250px;
-        text-align: left;
+        text-align: left; /* Logo info remains left-aligned */
         order: 0;
     }
     .footer-links-grid {
         grid-template-columns: repeat(3, 1fr);
-        gap: 40px;
+        gap: 20px; /* Reduced gap */
         flex-grow: 1;
-        justify-items: center;
+        justify-items: center; /* Center entire columns within the grid area */
+        text-align: center; /* Center text within each footer column */
         order: 1;
-        text-align: center;
     }
     .social-links {
         order: 2;
         margin-left: auto;
-        text-align: right;
+        text-align: right; /* Social links remain right-aligned */
     }
     .social-links h3 { text-align: right; }
     .social-links ul {
@@ -737,7 +770,7 @@ body {
 /* Адаптация для ПЛАНШЕТОВ (769px - 1024px) - вертикальная ориентация */
 @media (min-width: 769px) and (max-width: 1024px) {
     .container {
-        padding: 0 30px; /* Slightly less padding than desktop */
+        padding: 0 30px;
     }
     .main-nav ul { gap: 30px; }
     .hero-section { padding: 80px 30px; min-height: 400px; }
@@ -751,11 +784,11 @@ body {
         padding: 80px 30px;
     }
 
-    .problem-stats { grid-template-columns: repeat(2, 1fr); /* Two columns for tablets */ gap: 30px; }
+    .problem-stats { grid-template-columns: repeat(2, 1fr); gap: 30px; }
     .stat-item p { font-size: 16px; }
 
     .upload-promo-section { flex-direction: column; align-items: center; }
-    .promo-text, .upload-area { width: 100%; max-width: 600px; /* Constrain width for better reading */ }
+    .promo-text, .upload-area { width: 100%; max-width: 600px; }
     .promo-text h2 { font-size: 36px; }
     .promo-text .subtitle { font-size: 20px; }
     .promo-text h3 { font-size: 30px; }
@@ -770,11 +803,25 @@ body {
     .benefits-section { grid-template-columns: 1fr; }
     .benefit-item p { font-size: 28px; }
 
-    .timeline-wrapper { display: none; } /* Hide desktop timeline */
-    .mobile-roadmap-wrapper { display: block; /* Show mobile timeline */ }
+    .timeline-wrapper { display: none; }
+    .mobile-roadmap-wrapper { display: block; }
     .product-roadmap h2 { font-size: 36px; margin-bottom: 50px; }
-    .mobile-roadmap-line { left: 40px; }
-    .mobile-roadmap-point { left: 30px; }
+
+    .mobile-roadmap-line {
+        left: calc(30px / 2 + 8px);
+    }
+    .mobile-roadmap-line:after {
+        content: '';
+        bottom: 0;
+        left: -7px;
+        border-width: 12px 7px 0 7px;
+        border-color: var(--green-highlight) transparent transparent transparent;
+    }
+    .mobile-roadmap-point {
+        left: calc(30px / 2 + 8px - 15px);
+    }
+
+
     .mobile-roadmap-item { padding-left: 70px; margin-bottom: 25px; }
     .mobile-roadmap-header h4 { font-size: 28px; }
     .mobile-roadmap-details p { font-size: 15px; }
@@ -797,35 +844,32 @@ body {
     /* FOOTER for vertical Tablets */
     .main-footer { padding: 50px 30px; }
     .footer-container {
-        flex-direction: column; /* Stack elements vertically */
-        align-items: center; /* Center horizontally */
+        flex-direction: column;
+        align-items: center;
         gap: 30px;
     }
     .footer-links-grid {
-        grid-template-columns: repeat(3, 1fr); /* Try to keep 3 columns if space allows */
-        gap: 20px;
-        width: 100%; /* Take full width to help centering */
-        justify-items: center;
+        grid-template-columns: repeat(3, 1fr); /* Try to keep 3 columns */
+        gap: 20px; /* Reduced gap */
+        width: 100%;
+        justify-items: center; /* Center entire columns */
+        text-align: center; /* Center text within each footer column */
         order: 0; /* Move to the beginning */
-        text-align: center;
-    }
-    .footer-column {
-        text-align: center; /* Center column text */
     }
     .social-links {
-        order: 1; /* Place after links grid */
-        margin-left: 0; /* Reset auto margin */
-        width: 100%; /* Take full width for centering */
-        text-align: center; /* Center text */
+        order: 1;
+        margin-left: 0;
+        width: 100%;
+        text-align: center; /* Social links centered */
     }
     .social-links h3 { text-align: center; }
     .social-links ul {
-        justify-content: center; /* Center social icons */
+        justify-content: center;
     }
     .footer-logo-info {
-        text-align: center;
+        text-align: center; /* Logo info centered */
         flex-basis: auto;
-        order: 2; /* Move to the end */
+        order: 2;
     }
 }
 
@@ -836,15 +880,15 @@ body {
         padding: 0 20px;
     }
     .main-header { padding: 15px 20px; }
-    .main-header .logo .nav-link { font-size: 32px; } /* Smaller logo text */
-    .main-header .logo .your-logo-here { width: 60px; height: 60px; } /* Smaller logo image */
+    .main-header .logo .nav-link { font-size: 32px; }
+    .main-header .logo .your-logo-here { width: 60px; height: 60px; }
 
     /* Mobile Navigation */
     .main-nav {
         position: fixed;
         top: 0;
-        right: -100%; /* Off-screen by default */
-        width: 70%; /* Adjust as needed */
+        right: -100%;
+        width: 70%;
         height: 100%;
         background-color: var(--white);
         flex-direction: column;
@@ -855,7 +899,7 @@ body {
         z-index: 20;
     }
     .main-nav.active {
-        right: 0; /* Slide in */
+        right: 0;
     }
     .main-nav ul {
         flex-direction: column;
@@ -865,13 +909,13 @@ body {
         padding: 0 20px;
     }
     .main-nav ul li { width: 100%; }
-    .main-nav a { font-size: 20px; } /* Larger links for touch */
+    .main-nav a { font-size: 20px; }
     .menu-toggle {
-        display: block; /* Show hamburger icon */
+        display: block;
         margin-left: 20px;
-        color: var(--primary-text-color); /* Matches header color */
+        color: var(--white);
     }
-    .main-header .scan-cv-btn { display: none; } /* Hide button in mobile menu */
+    .main-header .scan-cv-btn { display: none; }
     .main-nav-overlay {
         position: fixed;
         top: 0;
@@ -880,15 +924,15 @@ body {
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 15;
-        display: none; /* Hidden by default */
+        display: none;
     }
     .main-nav.active + .main-nav-overlay {
-        display: block; /* Show overlay when menu is active */
+        display: block;
     }
 
 
     .hero-section { padding: 50px 20px; min-height: auto; }
-    .hero-content { align-items: center; text-align: center; } /* Center content for mobile */
+    .hero-content { align-items: center; text-align: center; }
     .hero-content h1 { font-size: 36px; }
     .hero-content p { font-size: 18px; }
     .hero-buttons { justify-content: center; flex-direction: column; align-items: center; }
@@ -900,8 +944,8 @@ body {
 
     .problem-statement h2 { font-size: 30px; margin-bottom: 40px; }
     .problem-statement h3 { font-size: 26px; }
-    .problem-stats { grid-template-columns: 1fr; /* Single column for mobile */ }
-    .stat-item { min-height: auto; padding-bottom: 20px; } /* Adjust height */
+    .problem-stats { grid-template-columns: 1fr; }
+    .stat-item { min-height: auto; padding-bottom: 20px; }
     .stat-item p { font-size: 16px; }
 
 
@@ -911,7 +955,7 @@ body {
     .promo-text .subtitle { font-size: 18px; }
     .promo-text h3 { font-size: 26px; margin-bottom: 20px; }
     .benefit-item-list { flex-direction: column; text-align: center; gap: 8px; align-items: center; }
-    .benefit-item-list img { margin-bottom: 5px; } /* Add space below icon */
+    .benefit-item-list img { margin-bottom: 5px; }
     .benefit-item-list p { font-size: 18px; }
     .upload-area p { font-size: 24px; }
     .upload-area .small-text { font-size: 18px; }
@@ -929,8 +973,8 @@ body {
 
     .product-roadmap { padding: 50px 20px; }
     .product-roadmap h2 { font-size: 30px; margin-bottom: 60px; }
-    .timeline-wrapper { display: none; } /* Hide desktop timeline */
-    .mobile-roadmap-wrapper { display: block; /* Show mobile timeline */ }
+    .timeline-wrapper { display: none; }
+    .mobile-roadmap-wrapper { display: block; }
     .mobile-roadmap-line { left: 20px; }
     .mobile-roadmap-point { left: 20px; }
     .mobile-roadmap-item { padding-left: 60px; }
@@ -942,8 +986,8 @@ body {
     .testimonials-section h2 { font-size: 30px; margin-bottom: 40px; }
     .testimonial-grid { grid-template-columns: 1fr; }
     .testimonial-item { padding: 20px; }
-    .author-info { justify-content: center; } /* Center author info */
-    .author, .role { text-align: center; } /* Center author text */
+    .author-info { justify-content: center; }
+    .author, .role { text-align: center; }
 
 
     .faq-section-wrapper { padding: 50px 20px; }
@@ -967,16 +1011,15 @@ body {
         gap: 20px;
     }
     .footer-links-grid {
-        grid-template-columns: 1fr; /* Stack columns on smallest screens */
+        grid-template-columns: 1fr;
         width: 100%;
         justify-items: center;
-        order: 0; /* Product, Company, Legal first */
         text-align: center;
+        order: 0;
+        gap: 10px;
     }
-    .footer-column { text-align: center; }
-
     .social-links {
-        order: 1; /* Connect with us second */
+        order: 1;
         margin-left: 0;
         width: 100%;
         text-align: center;
@@ -987,7 +1030,7 @@ body {
     .footer-logo-info {
         align-items: center;
         text-align: center;
-        order: 2; /* Logo + Info last */
+        order: 2;
     }
 }
 
@@ -1040,8 +1083,8 @@ body {
     /* Footer for very small screens */
     .footer-links-grid {
         grid-template-columns: 1fr;
-        gap: 15px;
+        gap: 10px;
     }
-    .footer-column h3 { font-size: 16px; margin-bottom: 15px; }
-    .footer-column ul li a { font-size: 13px; }
+    .footer-column h3 { font-size: 15px; margin-bottom: 8px; }
+    .footer-column ul li a { font-size: 12px; }
 }
