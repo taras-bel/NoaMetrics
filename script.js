@@ -1,25 +1,33 @@
-document.addEventListener('DOMContentLoaded', async function() {
-
-    // ===========================================
-    // ЗАГРУЗКА HEADER И FOOTER (ДОБАВЛЕННЫЙ БЛОК)
-    // ===========================================
-    const loadComponent = async (url, placeholderId) => {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Ошибка загрузки ${url}: Статус ${response.status}`);
-            }
-            const data = await response.text();
-            const placeholder = document.getElementById(placeholderId);
-            if (placeholder) {
-                placeholder.innerHTML = data;
-            }
-        } catch (error) {
-            console.error(`Не удалось загрузить компонент: ${error}`);
+// ===========================================
+// ЗАГРУЗКА HEADER И FOOTER (ДОБАВЛЕННЫЙ БЛОК)
+// ===========================================
+const loadComponent = async (url, placeholderId) => {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Error loading ${url}: Status ${response.status}`);
         }
-    };
+        const data = await response.text();
+        const placeholder = document.getElementById(placeholderId);
+        if (placeholder) {
+            placeholder.innerHTML = data;
+        }
+    } catch (error) {
+        console.error(`Failed to load component: ${error}`);
+    }
+};
 
-    // Ожидаем завершения загрузки хедера и футера перед выполнением остальных скриптов
+// Load header and footer components
+// No need to await here if they are not critical for immediate script execution.
+// If script depends on elements inside header/footer, then keep the await.
+// For SEO, it's better to render content ASAP, so async loading is good.
+// However, if the menu toggle or other elements are *inside* header.html,
+// they won't exist at initial script load time.
+// So, we'll keep the DOMContentLoaded for now, but `defer` helps.
+// For true non-blocking, these event listeners would need to be moved
+// into the loadComponent success callback or use event delegation.
+// Given the current structure, sticking with DOMContentLoaded for safety.
+document.addEventListener('DOMContentLoaded', async function() {
     await Promise.all([
         loadComponent('header.html', 'header-placeholder'),
         loadComponent('footer.html', 'footer-placeholder')
@@ -51,11 +59,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         // NEW: Close menu when clicking anywhere outside the menu
         document.addEventListener('click', function(event) {
-            // Проверяем, что меню активно и клик был не по кнопке переключения, не по самому меню и не по оверлею
-            if (mainNav.classList.contains('active') && 
-                !menuToggle.contains(event.target) && 
-                !mainNav.contains(event.target)) {
-                
+            // Check if the menu is active and the click was not on the toggle button, not on the menu itself, and not on the overlay
+            if (mainNav.classList.contains('active') &&
+                !menuToggle.contains(event.target) &&
+                !mainNav.contains(event.target) &&
+                !mainNavOverlay.contains(event.target)) { // Also exclude the overlay from closing itself
                 mainNav.classList.remove('active');
                 mainNavOverlay.classList.remove('active');
                 document.body.classList.remove('no-scroll');
@@ -84,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             e.preventDefault();
 
             const targetId = this.getAttribute('href');
-            // Проверяем, что это не просто "#"
+            // Check that it's not just "#"
             if (targetId.length > 1) {
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
@@ -149,6 +157,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 uploadStatusText.style.display = 'block';
                 uploadStatusText.textContent = 'Uploading... 0%';
                 uploadProgressBar.style.width = '0%';
+                uploadProgressBar.setAttribute('aria-valuenow', '0'); // Update ARIA value
 
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
@@ -161,6 +170,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const interval = setInterval(() => {
                     progress += 10;
                     uploadProgressBar.style.width = `${progress}%`;
+                    uploadProgressBar.setAttribute('aria-valuenow', progress.toString()); // Update ARIA value
                     uploadStatusText.textContent = `Uploading... ${progress}%`;
                     if (progress >= 100) {
                         clearInterval(interval);
@@ -182,9 +192,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     timelineItems.forEach(item => {
         // Updated: Click on the entire item or just the circle to toggle active state
         item.addEventListener('click', function() {
+            // For desktop, we want all text visible, so no active class for collapsing.
+            // If the intention is to highlight one, the CSS handles it.
+            // The existing `active` class is mainly for the 'Now' state or mobile accordion.
+            // To ensure all text is visible on desktop, the CSS has been adjusted.
+            // This JS part will primarily manage visual feedback (e.g., pulse animation stopping).
             const isActive = this.classList.contains('active');
 
-            // Close all other active items
+            // Close all other active items (if only one should be active at a time)
             timelineItems.forEach(i => {
                 if (i !== this && i.classList.contains('active')) {
                     i.classList.remove('active');
@@ -192,6 +207,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
 
             // Toggle active state for the clicked item
+            // This `active` class is useful if you want a visual highlight,
+            // but the text expansion is now managed by CSS `max-height: none` on desktop.
             this.classList.toggle('active', !isActive);
         });
     });
@@ -215,7 +232,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                         otherItem.classList.remove('active');
                         otherItem.querySelector('.mobile-roadmap-details').style.maxHeight = null;
                         // Reset other points if they were animated
-                        otherItem.querySelector('.mobile-roadmap-point').classList.remove('point-active'); 
+                        otherItem.querySelector('.mobile-roadmap-point').classList.remove('point-active');
                     }
                 });
 
@@ -306,13 +323,17 @@ document.addEventListener('DOMContentLoaded', async function() {
     const modal = document.getElementById('betaFormModal');
     const closeModalBtn = document.querySelector('.modal .close-button');
 
-    // Используем делегирование событий для кнопок открытия модального окна,
-    // так как они могут быть загружены динамически
+    // Use event delegation for modal open buttons, as they might be loaded dynamically
     document.body.addEventListener('click', function(event) {
         if (event.target.matches('.open-beta-modal')) {
             event.preventDefault();
             if (modal) {
                 modal.style.display = 'flex';
+                // Set focus to the first interactive element in the modal for accessibility
+                const firstFocusableElement = modal.querySelector('input, button, [tabindex="0"]');
+                if (firstFocusableElement) {
+                    firstFocusableElement.focus();
+                }
             }
         }
     });
@@ -327,9 +348,38 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (event.target === modal) {
                 modal.style.display = 'none';
             }
-            // Ensure clicking outside the mobile menu closes it, but not the modal itself
-            // This is already handled by the document click listener for the nav.
+        });
+
+        // Trap focus within the modal for accessibility
+        modal.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                modal.style.display = 'none';
+            }
+
+            if (modal.style.display === 'flex' && e.key === 'Tab') {
+                const focusableElements = modal.querySelectorAll('a[href], button, input, textarea, select, [tabindex]:not([tabindex="-1"])');
+                const firstFocusableElement = focusableElements[0];
+                const lastFocusableElement = focusableElements[focusableElements.length - 1];
+
+                if (e.shiftKey) { // Shift + Tab
+                    if (document.activeElement === firstFocusableElement) {
+                        lastFocusableElement.focus();
+                        e.preventDefault();
+                    }
+                } else { // Tab
+                    if (document.activeElement === lastFocusableElement) {
+                        firstFocusableElement.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
         });
     }
 
+    // Initial check for 'Now' timeline item to be active on desktop load
+    const nowTimelineItem = document.querySelector('.timeline-item.active');
+    if (nowTimelineItem) {
+        // No specific action needed here for desktop, as CSS now ensures it's always open.
+        // This is more relevant for mobile where it's an accordion.
+    }
 });
