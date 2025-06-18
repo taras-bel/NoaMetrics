@@ -27,9 +27,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // ===========================================
     // ВЕСЬ ОСТАЛЬНОЙ КОД, КОТОРЫЙ У ВАС УЖЕ БЫЛ
+    // И НОВЫЕ ИСПРАВЛЕНИЯ
     // ===========================================
 
-    // Navigation Menu Toggle (Hamburger menu for mobile)
+    // Navigation Menu Toggle (Hamburger menu for mobile and specific tablets)
     const menuToggle = document.querySelector('.menu-toggle');
     const mainNav = document.querySelector('.main-nav');
     const mainNavOverlay = document.querySelector('.main-nav-overlay');
@@ -41,24 +42,25 @@ document.addEventListener('DOMContentLoaded', async function() {
             document.body.classList.toggle('no-scroll');
         });
 
+        // Close menu when clicking on the overlay
         mainNavOverlay.addEventListener('click', function() {
             mainNav.classList.remove('active');
             mainNavOverlay.classList.remove('active');
             document.body.classList.remove('no-scroll');
         });
-    }
 
-    // Close mobile menu when a nav link is clicked
-    const navLinks = document.querySelectorAll('.main-nav a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (mainNav.classList.contains('active')) {
-                mainNav.classList.remove('active');
-                mainNavOverlay.classList.remove('active');
-                document.body.classList.remove('no-scroll');
-            }
+        // Close mobile menu when a nav link is clicked
+        const navLinks = document.querySelectorAll('.main-nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                    mainNavOverlay.classList.remove('active');
+                    document.body.classList.remove('no-scroll');
+                }
+            });
         });
-    });
+    }
 
 
     // Smooth Scrolling for Navigation Links
