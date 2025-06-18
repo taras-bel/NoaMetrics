@@ -333,6 +333,7 @@ body.no-scroll {
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    cursor: pointer; /* Make entire item clickable */
 }
 
 .timeline-item.revealed {
@@ -350,8 +351,7 @@ body.no-scroll {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow to transition */
     box-shadow: 0 0 0 0 rgba(15, 171, 171, 0.4);
     animation: pulse 2s infinite ease-out;
 }
@@ -391,7 +391,7 @@ body.no-scroll {
 }
 
 .timeline-item.active p {
-    max-height: 150px;
+    max-height: 150px; /* Adjust as needed for content height */
     opacity: 1;
 }
 
@@ -851,6 +851,8 @@ body.no-scroll {
         text-align: center;
         order: 1;
     }
+    .footer-column h3 { font-size: 16px; margin-bottom: 10px; }
+    .footer-column ul li a { font-size: 13px; }
     .social-links {
         order: 2;
         margin-left: auto;
@@ -923,10 +925,10 @@ body.no-scroll {
     .main-nav-overlay { display: none; } /* Control with JS */
 
     .hero-section { padding: 60px 30px; min-height: auto; }
-    .hero-content { align-items: center; text-align: center; }
+    .hero-content { align-items: center; text-align: center; } /* Centering for hero content */
     .hero-content h1 { font-size: 40px; }
     .hero-content p { font-size: 18px; }
-    .hero-buttons { justify-content: center; flex-direction: column; align-items: center; }
+    .hero-buttons { justify-content: center; flex-direction: column; align-items: center; } /* Centering for hero buttons */
     .hero-buttons .button { width: 100%; max-width: 350px; height: 55px; font-size: 18px; }
 
     .featured-in-section h2 { font-size: 30px; margin-bottom: 40px; }
@@ -1020,6 +1022,42 @@ body.no-scroll {
         text-align: center;
         order: 2;
     }
+}
+
+/* NEW Media Query for Square/Portrait Tablets (769px - 1199px width AND max-aspect-ratio 1/1) */
+@media (min-width: 769px) and (max-width: 1199px) and (max-aspect-ratio: 1/1) {
+    .main-header .main-nav {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Hide off-screen initially */
+        width: 70%; /* Adjust width as needed */
+        height: 100%;
+        background-color: var(--white);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 80px; /* Space for logo/header if needed */
+        transition: right 0.3s ease-in-out;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        z-index: 20;
+    }
+    .main-header .main-nav.active {
+        right: 0; /* Slide in when active */
+    }
+    .main-header .main-nav ul {
+        flex-direction: column; /* Stack links vertically */
+        gap: 30px;
+        width: 100%;
+        text-align: center;
+        padding: 0 20px;
+    }
+    .main-header .main-nav ul li { width: 100%; }
+    .main-header .main-nav a { font-size: 20px; } /* Larger font for mobile links */
+    .main-header .scan-cv-btn { display: none; } /* Hide scan CV button */
+    .main-header .menu-toggle {
+        display: flex; /* Show burger menu */
+        margin-left: 20px;
+    }
+    .main-nav-overlay { display: none; } /* Controlled by JS */
 }
 
 
@@ -1149,7 +1187,7 @@ body.no-scroll {
     .cta-section { padding: 50px 20px; }
     .cta-content { padding: 40px 20px; }
     .cta-content h2 { font-size: 30px; }
-    .cta-content p { font-size: 18px; }
+    .cta-content p { font-size: 16px; }
     .cta-button { width: 100%; max-width: 300px; }
 
     /* Footer for Mobile phones */
