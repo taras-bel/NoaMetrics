@@ -268,7 +268,7 @@ body.no-scroll {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    margin-bottom: 80px; /* Added margin to push content below */
+    margin-bottom: 80px;
 }
 
 .timeline {
@@ -289,8 +289,8 @@ body.no-scroll {
     position: absolute;
     top: 32px;
     left: 0;
-    right: 12px; /* Оставляем место для стрелки (12px) */
-    height: 4px; /* Высота линии */
+    right: 12px;
+    height: 4px;
     background: var(--green-highlight);
     z-index: -1;
     transform-origin: left center;
@@ -302,7 +302,7 @@ body.no-scroll {
 .timeline:after {
     content: '';
     position: absolute;
-    right: 0; /* Позиционируем стрелку в самом конце */
+    right: 0;
     top: calc(33.5px - 7px);
     width: 0;
     height: 0;
@@ -311,7 +311,7 @@ body.no-scroll {
     border-color: transparent transparent transparent var(--green-highlight);
     z-index: -1;
     opacity: 0;
-    transition: opacity 0.5s ease-out 0.5s; /* Задержка для появления после линии */
+    transition: opacity 0.5s ease-out 0.5s;
 }
 
 /* Класс для активации анимации */
@@ -333,7 +333,7 @@ body.no-scroll {
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    cursor: pointer; /* Make entire item clickable */
+    cursor: pointer;
 }
 
 .timeline-item.revealed {
@@ -351,19 +351,32 @@ body.no-scroll {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow to transition */
-    box-shadow: 0 0 0 0 rgba(15, 171, 171, 0.4);
+    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    /* Убрали анимацию pulse по умолчанию */
+    box-shadow: 0 0 0 0 rgba(15, 171, 171, 0.4); /* Только для начального состояния */
+}
+
+/* Анимация pulse только для неактивных элементов */
+.timeline-item:not(.active) .circle {
     animation: pulse 2s infinite ease-out;
 }
 
-.timeline-item.active .circle,
-.timeline-item .circle:hover {
-    animation: none;
+.timeline-item.active .circle {
+    animation: none; /* Убираем pulse для активного элемента */
     transform: translateX(-50%) scale(1.1);
     background-color: var(--green-highlight);
     border-color: var(--dark-bg);
     box-shadow: 0 0 20px rgba(15, 171, 171, 0.8);
 }
+/* Анимация точки при наведении */
+.timeline-item:hover .circle {
+    transform: translateX(-50%) scale(1.1);
+    background-color: var(--green-highlight);
+    border-color: var(--dark-bg);
+    box-shadow: 0 0 20px rgba(15, 171, 171, 0.8);
+    animation: none; /* Убираем pulse при наведении */
+}
+
 
 .timeline-item h4 {
     font-family: var(--font-inter);
@@ -374,7 +387,8 @@ body.no-scroll {
     width: 100%;
     margin-top: 20px;
 }
-.timeline-item p {
+/* Изменения для текста roadmap */
+.timeline-item .timeline-detail {
     font-family: var(--font-inter);
     font-size: 32px;
     font-weight: 400;
@@ -384,17 +398,15 @@ body.no-scroll {
     line-height: 1.2;
     margin-top: 10px;
 
-    /* Изменения для Roadmap: Убираем max-height, делаем overflow: visible для десктопа */
-    max-height: none; /* Allow content to expand fully */
-    overflow: visible; /* Show all content */
-    opacity: 1; /* Always visible on desktop */
-    transition: none; /* No transition for this state */
+    max-height: 0; /* Изначально скрыт */
+    overflow: hidden; /* Обрезает содержимое */
+    opacity: 0; /* Делает невидимым */
+    transition: max-height 0.5s ease-out, opacity 0.4s ease-out; /* Анимация раскрытия */
 }
 
-.timeline-item.active p {
-    /* На десктопе всегда показывать текст, поэтому эти стили будут переопределены медиа-запросом */
-    max-height: none;
-    opacity: 1;
+.timeline-item.active .timeline-detail {
+    max-height: 200px; /* Достаточная высота для отображения текста */
+    opacity: 1; /* Делает видимым */
 }
 
 @keyframes pulse {
@@ -414,9 +426,9 @@ body.no-scroll {
 /* Линия таймлайна для мобильных устройств */
 .mobile-roadmap-line {
     position: absolute;
-    left: 13px; /* Сдвиг на 1px влево (14px - 1px) */
+    left: 13px;
     top: 0;
-    bottom: 0; /* Линия идет до самого низа */
+    bottom: 0;
     width: 4px;
     background-color: var(--green-highlight);
     z-index: 0;
@@ -428,14 +440,14 @@ body.no-scroll {
 .mobile-roadmap-line:after {
     content: '';
     position: absolute;
-    bottom: -5px; /* Изменено: Перемещено на 5px ниже конца линии */
-    left: calc(50%); /* Центрирование стрелки на линии */
-    transform: translateX(-50%); /* Точное центрирование стрелки на линии */
+    bottom: -5px;
+    left: calc(50%);
+    transform: translateX(-50%);
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 12px 7px 0 7px; /* Arrow shape definition */
-    border-color: var(--green-highlight) transparent transparent transparent; /* Arrow color */
+    border-width: 12px 7px 0 7px;
+    border-color: var(--green-highlight) transparent transparent transparent;
     z-index: 0;
     opacity: 0;
     transition: opacity 0.5s ease-out 0.5s;
@@ -461,8 +473,7 @@ body.no-scroll {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    /* Увеличиваем padding-left для учета размера точки и отступа */
-    padding-left: calc(30px + 8px * 2 + 20px); /* point_width + point_border*2 + desired_gap */
+    padding-left: calc(30px + 8px * 2 + 20px);
     position: relative;
     width: 100%;
     margin-bottom: 30px;
@@ -484,14 +495,14 @@ body.no-scroll {
     border: 8px solid var(--green-highlight);
     border-radius: 50%;
     position: absolute;
-    left: 0; /* Точка выровнена по левому краю для простоты */
+    left: 0;
     top: 0;
     cursor: pointer;
     transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 /* Анимация точки при активном пункте Roadmap */
 .mobile-roadmap-item.active .mobile-roadmap-point,
-.mobile-roadmap-point.point-active { /* Added point-active for JS control */
+.mobile-roadmap-point.point-active {
     transform: scale(1.2);
     background-color: var(--green-highlight);
     box-shadow: 0 0 15px rgba(15, 171, 171, 0.6);
@@ -527,11 +538,11 @@ body.no-scroll {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
-    opacity: 0; /* Ensures it's hidden when max-height is 0 */
+    opacity: 0;
     width: 100%;
 }
 .mobile-roadmap-item.active .mobile-roadmap-details {
-    max-height: 200px; /* Sufficient height to show content */
+    max-height: 200px;
     opacity: 1;
 }
 .mobile-roadmap-details p {
@@ -825,18 +836,17 @@ body.no-scroll {
         right: 40px;
     }
     .timeline-item h4 { font-size: 44px; }
-    .timeline-item p {
+    /* Десктопные стили для текста roadmap - здесь убираем max-height: none */
+    .timeline-item .timeline-detail {
         font-size: 28px;
-        /* Переопределение для десктопа: текст должен быть всегда виден и не обрезаться */
-        max-height: none;
-        overflow: visible;
-        opacity: 1;
-        transition: none;
+        max-height: 0; /* Изначально скрыто на десктопе */
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-out, opacity 0.4s ease-out;
     }
-    .timeline-item .circle {
-        width: 67px;
-        height: 67px;
-        border-width: 8px; /* Consistent border-width */
+    .timeline-item.active .timeline-detail {
+        max-height: 200px; /* Достаточная высота для отображения текста */
+        opacity: 1;
     }
 
     .problem-stats { grid-template-columns: repeat(3, 1fr); gap: 40px; }
