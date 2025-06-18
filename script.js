@@ -18,15 +18,6 @@ const loadComponent = async (url, placeholderId) => {
 };
 
 // Load header and footer components
-// No need to await here if they are not critical for immediate script execution.
-// If script depends on elements inside header/footer, then keep the await.
-// For SEO, it's better to render content ASAP, so async loading is good.
-// However, if the menu toggle or other elements are *inside* header.html,
-// they won't exist at initial script load time.
-// So, we'll keep the DOMContentLoaded for now, but `defer` helps.
-// For true non-blocking, these event listeners would need to be moved
-// into the loadComponent success callback or use event delegation.
-// Given the current structure, sticking with DOMContentLoaded for safety.
 document.addEventListener('DOMContentLoaded', async function() {
     await Promise.all([
         loadComponent('header.html', 'header-placeholder'),
@@ -59,11 +50,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         // NEW: Close menu when clicking anywhere outside the menu
         document.addEventListener('click', function(event) {
-            // Check if the menu is active and the click was not on the toggle button, not on the menu itself, and not on the overlay
             if (mainNav.classList.contains('active') &&
                 !menuToggle.contains(event.target) &&
                 !mainNav.contains(event.target) &&
-                !mainNavOverlay.contains(event.target)) { // Also exclude the overlay from closing itself
+                !mainNavOverlay.contains(event.target)) {
                 mainNav.classList.remove('active');
                 mainNavOverlay.classList.remove('active');
                 document.body.classList.remove('no-scroll');
@@ -75,7 +65,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         const navLinks = document.querySelectorAll('.main-nav a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
-                // Check if the menu is active before closing
                 if (mainNav.classList.contains('active')) {
                     mainNav.classList.remove('active');
                     mainNavOverlay.classList.remove('active');
@@ -92,7 +81,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             e.preventDefault();
 
             const targetId = this.getAttribute('href');
-            // Check that it's not just "#"
             if (targetId.length > 1) {
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
@@ -157,7 +145,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 uploadStatusText.style.display = 'block';
                 uploadStatusText.textContent = 'Uploading... 0%';
                 uploadProgressBar.style.width = '0%';
-                uploadProgressBar.setAttribute('aria-valuenow', '0'); // Update ARIA value
+                uploadProgressBar.setAttribute('aria-valuenow', '0');
 
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
@@ -170,7 +158,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const interval = setInterval(() => {
                     progress += 10;
                     uploadProgressBar.style.width = `${progress}%`;
-                    uploadProgressBar.setAttribute('aria-valuenow', progress.toString()); // Update ARIA value
+                    uploadProgressBar.setAttribute('aria-valuenow', progress.toString());
                     uploadStatusText.textContent = `Uploading... ${progress}%`;
                     if (progress >= 100) {
                         clearInterval(interval);
@@ -187,68 +175,67 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
 
-    // Roadmap Dot Interaction (Desktop & Tablet)
-    const timelineItems = document.querySelectorAll('.timeline-item');
-    timelineItems.forEach(item => {
-        // Updated: Click on the entire item or just the circle to toggle active state
-        item.addEventListener('click', function() {
-            // For desktop, we want all text visible, so no active class for collapsing.
-            // If the intention is to highlight one, the CSS handles it.
-            // The existing `active` class is mainly for the 'Now' state or mobile accordion.
-            // To ensure all text is visible on desktop, the CSS has been adjusted.
-            // This JS part will primarily manage visual feedback (e.g., pulse animation stopping).
-            const isActive = this.classList.contains('active');
+    // Roadmap Accordion (Desktop & Tablet) - Unified Logic for Desktop & Mobile
+    // This logic now supports both desktop (via media query CSS for timeline-wrapper display)
+    // and mobile for the actual accordion behavior.
+    const allRoadmapItems = document.querySelectorAll('.timeline-item, .mobile-roadmap-item');
 
-            // Close all other active items (if only one should be active at a time)
-            timelineItems.forEach(i => {
-                if (i !== this && i.classList.contains('active')) {
-                    i.classList.remove('active');
-                }
-            });
+    allRoadmapItems.forEach(item => {
+        const header = item.querySelector('h4'); // The H4 serves as the clickable header
+        const detail = item.querySelector('.timeline-detail') || item.querySelector('.mobile-roadmap-details');
+        const circle = item.querySelector('.circle') || item.querySelector('.mobile-roadmap-point');
 
-            // Toggle active state for the clicked item
-            // This `active` class is useful if you want a visual highlight,
-            // but the text expansion is now managed by CSS `max-height: none` on desktop.
-            this.classList.toggle('active', !isActive);
-        });
-    });
-
-
-    // Mobile Roadmap Accordion
-    const mobileRoadmapItems = document.querySelectorAll('.mobile-roadmap-item');
-    mobileRoadmapItems.forEach(item => {
-        const header = item.querySelector('.mobile-roadmap-header');
-        const details = item.querySelector('.mobile-roadmap-details');
-        const point = item.querySelector('.mobile-roadmap-point'); // Get the point element
-
-        if (header && details && point) { // Ensure all elements exist
-            // Listen for clicks on the header and the point
-            const toggleHandler = function() {
+        if (header && detail && circle) {
+            const toggleAccordion = function() {
                 const isActive = item.classList.contains('active');
 
                 // Close all other active items
-                mobileRoadmapItems.forEach(otherItem => {
-                    if (otherItem !== item) {
+                allRoadmapItems.forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
                         otherItem.classList.remove('active');
-                        otherItem.querySelector('.mobile-roadmap-details').style.maxHeight = null;
-                        // Reset other points if they were animated
-                        otherItem.querySelector('.mobile-roadmap-point').classList.remove('point-active');
+                        const otherDetail = otherItem.querySelector('.timeline-detail') || otherItem.querySelector('.mobile-roadmap-details');
+                        const otherCircle = otherItem.querySelector('.circle') || otherItem.querySelector('.mobile-roadmap-point');
+                        if (otherDetail) {
+                            otherDetail.style.maxHeight = null;
+                            otherDetail.style.opacity = '0'; // Ensure opacity is reset
+                        }
+                        if (otherCircle) {
+                            otherCircle.classList.remove('point-active'); // Remove point-active for mobile
+                        }
                     }
                 });
 
+                // Toggle active state for the clicked item
                 if (!isActive) {
                     item.classList.add('active');
-                    details.style.maxHeight = details.scrollHeight + "px";
-                    point.classList.add('point-active'); // Add class to animate the point
+                    detail.style.maxHeight = detail.scrollHeight + "px";
+                    detail.style.opacity = '1';
+                    circle.classList.add('point-active'); // For mobile, also applies to desktop for consistency
                 } else {
                     item.classList.remove('active');
-                    details.style.maxHeight = null;
-                    point.classList.remove('point-active'); // Remove class to reset the point
+                    detail.style.maxHeight = null;
+                    detail.style.opacity = '0';
+                    circle.classList.remove('point-active');
                 }
             };
 
-            header.addEventListener('click', toggleHandler);
-            point.addEventListener('click', toggleHandler); // Add click listener to the point
+            // Initial state: If an item has the 'active' class on load (e.g., 'Now'), open it
+            if (item.classList.contains('active')) {
+                // For desktop, we want this to be open by default
+                // For mobile, this also ensures 'Now' is open if the class is applied via HTML
+                detail.style.maxHeight = detail.scrollHeight + "px";
+                detail.style.opacity = '1';
+                circle.classList.add('point-active');
+            } else {
+                detail.style.maxHeight = null;
+                detail.style.opacity = '0';
+            }
+
+
+            // Add event listeners to both the header (for accessibility/text click)
+            // and the circle (for visual click target)
+            header.addEventListener('click', toggleAccordion);
+            circle.addEventListener('click', toggleAccordion);
         }
     });
 
@@ -291,8 +278,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (!roadmapSection) return;
 
         const triggerBottom = window.innerHeight * 0.8;
-        const allRoadmapItems = document.querySelectorAll('.timeline-item, .mobile-roadmap-item');
-        allRoadmapItems.forEach(item => {
+        const allRevealedItems = document.querySelectorAll('.timeline-item, .mobile-roadmap-item'); // Changed variable name
+        allRevealedItems.forEach(item => {
             const itemTop = item.getBoundingClientRect().top;
             if (itemTop < triggerBottom) {
                 item.classList.add('revealed');
@@ -329,7 +316,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             event.preventDefault();
             if (modal) {
                 modal.style.display = 'flex';
-                // Set focus to the first interactive element in the modal for accessibility
                 const firstFocusableElement = modal.querySelector('input, button, [tabindex="0"]');
                 if (firstFocusableElement) {
                     firstFocusableElement.focus();
@@ -371,15 +357,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                         firstFocusableElement.focus();
                         e.preventDefault();
                     }
-                }
+                    }
             }
         });
-    }
-
-    // Initial check for 'Now' timeline item to be active on desktop load
-    const nowTimelineItem = document.querySelector('.timeline-item.active');
-    if (nowTimelineItem) {
-        // No specific action needed here for desktop, as CSS now ensures it's always open.
-        // This is more relevant for mobile where it's an accordion.
     }
 });
