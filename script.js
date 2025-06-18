@@ -49,6 +49,20 @@ document.addEventListener('DOMContentLoaded', async function() {
             document.body.classList.remove('no-scroll');
         });
 
+        // NEW: Close menu when clicking anywhere outside the menu
+        document.addEventListener('click', function(event) {
+            // Проверяем, что меню активно и клик был не по кнопке переключения, не по самому меню и не по оверлею
+            if (mainNav.classList.contains('active') && 
+                !menuToggle.contains(event.target) && 
+                !mainNav.contains(event.target)) {
+                
+                mainNav.classList.remove('active');
+                mainNavOverlay.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+            }
+        });
+
+
         // Close mobile menu when a nav link is clicked
         const navLinks = document.querySelectorAll('.main-nav a');
         navLinks.forEach(link => {
@@ -188,21 +202,36 @@ document.addEventListener('DOMContentLoaded', async function() {
     mobileRoadmapItems.forEach(item => {
         const header = item.querySelector('.mobile-roadmap-header');
         const details = item.querySelector('.mobile-roadmap-details');
+        const point = item.querySelector('.mobile-roadmap-point'); // Get the point element
 
-        if (header && details) {
-            header.addEventListener('click', function() {
+        if (header && details && point) { // Ensure all elements exist
+            // Listen for clicks on the header and the point
+            const toggleHandler = function() {
                 const isActive = item.classList.contains('active');
 
+                // Close all other active items
                 mobileRoadmapItems.forEach(otherItem => {
-                    otherItem.classList.remove('active');
-                    otherItem.querySelector('.mobile-roadmap-details').style.maxHeight = null;
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                        otherItem.querySelector('.mobile-roadmap-details').style.maxHeight = null;
+                        // Reset other points if they were animated
+                        otherItem.querySelector('.mobile-roadmap-point').classList.remove('point-active'); 
+                    }
                 });
 
                 if (!isActive) {
                     item.classList.add('active');
                     details.style.maxHeight = details.scrollHeight + "px";
+                    point.classList.add('point-active'); // Add class to animate the point
+                } else {
+                    item.classList.remove('active');
+                    details.style.maxHeight = null;
+                    point.classList.remove('point-active'); // Remove class to reset the point
                 }
-            });
+            };
+
+            header.addEventListener('click', toggleHandler);
+            point.addEventListener('click', toggleHandler); // Add click listener to the point
         }
     });
 
@@ -298,6 +327,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (event.target === modal) {
                 modal.style.display = 'none';
             }
+            // Ensure clicking outside the mobile menu closes it, but not the modal itself
+            // This is already handled by the document click listener for the nav.
         });
     }
 
