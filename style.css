@@ -384,14 +384,16 @@ body.no-scroll {
     line-height: 1.2;
     margin-top: 10px;
 
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.5s ease-out, opacity 0.4s ease-out;
+    /* Изменения для Roadmap: Убираем max-height, делаем overflow: visible для десктопа */
+    max-height: none; /* Allow content to expand fully */
+    overflow: visible; /* Show all content */
+    opacity: 1; /* Always visible on desktop */
+    transition: none; /* No transition for this state */
 }
 
 .timeline-item.active p {
-    max-height: 150px; /* Adjust as needed for content height */
+    /* На десктопе всегда показывать текст, поэтому эти стили будут переопределены медиа-запросом */
+    max-height: none;
     opacity: 1;
 }
 
@@ -823,7 +825,14 @@ body.no-scroll {
         right: 40px;
     }
     .timeline-item h4 { font-size: 44px; }
-    .timeline-item p { font-size: 28px; }
+    .timeline-item p {
+        font-size: 28px;
+        /* Переопределение для десктопа: текст должен быть всегда виден и не обрезаться */
+        max-height: none;
+        overflow: visible;
+        opacity: 1;
+        transition: none;
+    }
     .timeline-item .circle {
         width: 67px;
         height: 67px;
@@ -934,11 +943,11 @@ body.no-scroll {
     .main-nav-overlay { display: none; } /* Control with JS */
 
     .hero-section { padding: 60px 30px; min-height: auto; }
-    .hero-content { 
-        align-items: center; 
-        text-align: center; 
+    .hero-content {
+        align-items: center;
+        text-align: center;
         margin: 0 auto; /* CENTERED ON IPAD PRO */
-    } 
+    }
     .hero-content h1 { font-size: 40px; }
     .hero-content p { font-size: 18px; }
     .hero-buttons { justify-content: center; flex-direction: column; align-items: center; } /* Centering for hero buttons */
