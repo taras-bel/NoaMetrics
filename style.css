@@ -12,7 +12,7 @@
     --dark-border: #000000;
     --accent-gray: #d9d9d9;
     --placeholder-gray: #c8c8c8;
-    --hero-bg: #c8c2b6; /* Changed to match provided image */
+    --hero-bg: #c8c8c8; /* Changed to match provided image */
     --upload-area-bg: #f4f4f4;
     --upload-highlight-bg: #e0fffb; /* New color for drag highlight */
     --customer-text-color: #909b99;
@@ -86,19 +86,62 @@ body {
 .main-nav a { color: var(--primary-text-color); font-family: var(--font-open-sans); font-weight: 600; font-size: 16px; transition: color 0.3s ease; }
 .main-nav a:hover { color: var(--green-highlight); }
 .main-header .scan-cv-btn { padding: 15px 8px; width: 162px; font-size: 16px; flex-shrink: 0; }
-.menu-toggle {
-    display: none;
-    font-size: 2rem;
-    color: var(--primary-text-color);
-    transition: color 0.3s ease;
-    cursor: pointer;
-}
-.menu-toggle:hover {
-    color: var(--green-highlight);
-}
 .nav-link-button { padding: 8px 16px; border: 1px solid var(--dark-bg); border-radius: 4px; }
 .nav-link-button:hover { background: var(--dark-bg); color: var(--white); border-color: var(--dark-bg); }
-.main-nav-overlay { display: none; }
+
+/* Burger menu icon */
+.menu-toggle {
+    display: none; /* Hidden by default, shown in media queries */
+    width: 30px;
+    height: 24px;
+    position: relative;
+    cursor: pointer;
+    background: none;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    border: none;
+    box-sizing: content-box;
+}
+
+.hamburger-line {
+    display: block;
+    width: 100%;
+    height: 4px;
+    background-color: var(--primary-text-color); /* Default color */
+    border-radius: 2px;
+    transition: all 0.3s ease-in-out;
+}
+
+.menu-toggle.active .hamburger-line:nth-child(1) {
+    transform: translateY(10px) rotate(45deg);
+}
+.menu-toggle.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+.menu-toggle.active .hamburger-line:nth-child(3) {
+    transform: translateY(-10px) rotate(-45deg);
+}
+
+/* Overlay for mobile menu */
+.main-nav-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 15;
+    cursor: pointer;
+}
+.main-nav.active + .main-nav-overlay {
+    display: block;
+}
+body.no-scroll {
+    overflow: hidden;
+}
 
 /* Hero Section */
 .hero-section {
@@ -720,6 +763,31 @@ body {
     }
 
     .main-header { padding: 20px 40px; }
+    .main-header .scan-cv-btn { display: inline-flex; } /* Show for desktop */
+    .menu-toggle { display: none; } /* Hide burger for desktop */
+    .main-nav {
+        position: static;
+        right: auto;
+        width: auto;
+        height: auto;
+        background-color: transparent;
+        flex-direction: row;
+        justify-content: flex-end;
+        box-shadow: none;
+        padding-top: 0;
+        transition: none;
+        z-index: auto;
+        display: block;
+    }
+    .main-nav ul {
+        display: flex;
+        gap: 60px;
+        align-items: center;
+        width: auto;
+        text-align: left;
+    }
+    .main-nav-overlay { display: none; }
+
     .hero-section { padding: 100px 40px; min-height: 580px; }
     .hero-content h1 { font-size: 60px; }
     .hero-content p { font-size: 22px; }
@@ -800,257 +868,128 @@ body {
 }
 
 
-/* NEW Media Query for Horizontal Tablets & Asus Zenbook Fold (unfolded) */
-@media (min-width: 769px) and (max-width: 1200px) {
+/* NEW Media Query for Tablets (769px - 1024px) - all orientations */
+/* This covers Asus Zenbook Fold (unfolded), iPad Air, iPad Pro, etc. */
+@media (min-width: 769px) and (max-width: 1024px) {
     .container {
         padding: 0 30px;
     }
     .main-header {
-        padding: 20px 30px;
+        padding: 15px 30px;
     }
     .main-header .logo .nav-link {
-        font-size: 36px; /* Slightly smaller logo text */
+        font-size: 32px;
     }
     .main-header .logo .your-logo-here {
-        width: 65px;
-        height: 65px;
+        width: 60px;
+        height: 60px;
     }
 
-    /* Ensure main navigation is visible and behaves like desktop, but adjusted */
+    /* Show burger menu and hide desktop nav elements */
+    .menu-toggle {
+        display: flex; /* Show burger menu */
+        margin-left: 20px;
+    }
+    .hamburger-line {
+        background-color: var(--primary-text-color); /* Default black/dark color for burger lines */
+    }
     .main-nav {
-        position: static; /* Override fixed/absolute from mobile */
-        right: auto;
-        width: auto;
-        height: auto;
-        background-color: transparent;
-        flex-direction: row; /* Ensure it's a row */
-        justify-content: flex-end; /* Align links to the right */
-        box-shadow: none;
-        padding-top: 0;
-        transition: none; /* Disable mobile transition */
-        z-index: auto;
-        display: block; /* Ensure it's not hidden by mobile styles */
+        position: fixed;
+        top: 0;
+        right: -100%; /* Hide off-screen initially */
+        width: 70%; /* Adjust width as needed */
+        height: 100%;
+        background-color: var(--white);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 80px; /* Space for logo/header if needed */
+        transition: right 0.3s ease-in-out;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        z-index: 20;
+    }
+    .main-nav.active {
+        right: 0; /* Slide in when active */
     }
     .main-nav ul {
-        display: flex;
-        gap: 30px; /* Adjust gap for these devices */
-        align-items: center;
-        width: auto;
-        text-align: left;
-        flex-wrap: wrap; /* Allow links to wrap if space is tight */
-    }
-    .main-nav a {
-        font-size: 16px; /* Standard text size for nav links */
-        white-space: nowrap; /* Prevent breaking nav links */
-    }
-    .main-header .scan-cv-btn {
-        padding: 12px 18px; /* Slightly smaller button padding */
-        width: auto; /* Auto width */
-        font-size: 15px; /* Smaller font size */
-        flex-shrink: 0;
-        display: inline-flex; /* Ensure it's visible */
-    }
-
-    /* Hide mobile specific elements */
-    .menu-toggle {
-        display: none;
-    }
-    .main-nav-overlay {
-        display: none;
-    }
-
-    /* Adjust hero section and other content */
-    .hero-section { padding: 80px 30px; min-height: 400px; }
-    .hero-content h1 { font-size: 48px; }
-    .hero-content p { font-size: 20px; }
-    .hero-buttons .button { width: 320px; height: 55px; font-size: 18px; }
-
-    .featured-in-section, .problem-statement, .upload-promo-section,
-    .features-overview, .benefits-section, .product-roadmap,
-    .testimonials-section, .faq-section-wrapper, .cta-section {
-        padding: 80px 30px;
-    }
-
-    .problem-stats { grid-template-columns: repeat(2, 1fr); gap: 30px; }
-    .stat-item p { font-size: 16px; }
-
-    .upload-promo-section { flex-direction: row; align-items: flex-start; }
-    .promo-text, .upload-area { width: 50%; max-width: none; } /* Revert to side-by-side */
-    .promo-text h2 { font-size: 36px; }
-    .promo-text .subtitle { font-size: 20px; }
-    .promo-text h3 { font-size: 30px; }
-    .benefit-item-list p { font-size: 20px; }
-    .upload-area p { font-size: 30px; }
-    .upload-area .small-text { font-size: 20px; }
-
-    .features-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
-    .info-block p { font-size: 20px; }
-    .large-cta-button { width: 100%; max-width: 500px; }
-
-    .benefits-section { grid-template-columns: repeat(2, 1fr); } /* Revert to 2 columns */
-    .benefit-item p { font-size: 28px; }
-
-    .timeline-wrapper { display: flex; } /* Revert to desktop timeline */
-    .mobile-roadmap-wrapper { display: none; }
-    .product-roadmap h2 { font-size: 36px; margin-bottom: 50px; }
-    .timeline-item h4 { font-size: 36px; }
-    .timeline-item p { font-size: 24px; }
-    .timeline-item .circle {
-        width: 55px; /* Slightly smaller circles */
-        height: 55px;
-        border-width: 7px; /* Adjust border */
-    }
-    .timeline:before {
-        left: 30px;
-        right: calc(30px + 12px);
-    }
-    .timeline:after {
-        right: 30px;
-    }
-
-
-    .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
-    .testimonials-section h2 { font-size: 36px; margin-bottom: 50px; }
-
-    .faq-container { flex-direction: row; align-items: flex-start; }
-    .faq-image-placeholder, .faq-content { width: 50%; max-width: none; } /* Revert to side-by-side */
-    .faq-content h2 { font-size: 28px; margin-bottom: 25px; }
-    .faq-question { font-size: 15px; }
-    .faq-answer p { font-size: 14px; }
-
-    .cta-content { padding: 60px; }
-    .cta-content h2 { font-size: 40px; }
-    .cta-content p { font-size: 20px; }
-    .cta-button { width: 320px; height: 55px; font-size: 18px; }
-
-    /* FOOTER for this specific range */
-    .main-footer { padding: 50px 30px; }
-    .footer-container {
-        flex-direction: row; /* Keep as row */
-        justify-content: space-between;
-        align-items: flex-start;
+        flex-direction: column; /* Stack links vertically */
         gap: 30px;
-    }
-    .footer-links-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        width: auto;
-        justify-items: center;
+        width: 100%;
         text-align: center;
-        order: 1; /* Keep desktop order */
+        padding: 0 20px;
     }
-    .social-links {
-        order: 2; /* Keep desktop order */
-        margin-left: auto;
-        width: auto;
-        text-align: right;
-    }
-    .social-links h3 { text-align: right; }
-    .social-links ul {
-        justify-content: flex-end;
-    }
-    .footer-logo-info {
-        text-align: left;
-        flex-basis: auto;
-        order: 0; /* Keep desktop order */
-    }
-}
+    .main-nav ul li { width: 100%; }
+    .main-nav a { font-size: 20px; } /* Larger font for mobile links */
+    .main-header .scan-cv-btn { display: none; } /* Hide scan CV button */
+    .main-nav-overlay { display: none; } /* Control with JS */
 
+    .hero-section { padding: 60px 30px; min-height: auto; }
+    .hero-content { align-items: center; text-align: center; }
+    .hero-content h1 { font-size: 40px; }
+    .hero-content p { font-size: 18px; }
+    .hero-buttons { justify-content: center; flex-direction: column; align-items: center; }
+    .hero-buttons .button { width: 100%; max-width: 350px; height: 55px; font-size: 18px; }
 
-/* Адаптация для ПЛАНШЕТОВ (769px - 1024px) - вертикальная ориентация */
-/* Этот медиазапрос теперь будет применяться только к вертикальным планшетам,
-   так как горизонтальные будут охватываться новым медиазапросом выше. */
-@media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
-    .container {
-        padding: 0 30px;
-    }
-    .main-nav { /* Ensure main-nav is not fixed and behaves like desktop */
-        position: static;
-        right: auto;
-        width: auto;
-        height: auto;
-        background-color: transparent;
-        flex-direction: row; /* Ensure it's a row */
-        justify-content: flex-end; /* Align links to the right */
-        box-shadow: none;
-        padding-top: 0;
-        transition: none; /* Disable mobile transition */
-        z-index: auto;
-    }
-    .main-nav ul { /* Ensure the list is a row */
-        display: flex;
-        gap: 30px; /* Adjust gap for tablets */
-        align-items: center;
-        width: auto;
-        text-align: left;
-    }
-    .main-nav a { /* Ensure text size is consistent */
-        font-size: 16px;
-    }
-    .menu-toggle { /* Hide the hamburger menu for tablets */
-        display: none;
-    }
-    .main-nav-overlay { /* Hide the overlay */
-        display: none;
-    }
-    .main-header .scan-cv-btn { /* Make sure the scan button is visible */
-        display: inline-flex; /* or block */
-    }
+    .featured-in-section h2 { font-size: 30px; margin-bottom: 40px; }
+    .logos-grp { gap: 40px; }
+    .logos-grp img { width: 180px; height: 50px; }
 
-    .hero-section { padding: 80px 30px; min-height: 400px; }
-    .hero-content h1 { font-size: 48px; }
-    .hero-content p { font-size: 20px; }
-    .hero-buttons .button { width: 320px; height: 55px; font-size: 18px; }
-
-    .featured-in-section, .problem-statement, .upload-promo-section,
-    .features-overview, .benefits-section, .product-roadmap,
-    .testimonials-section, .faq-section-wrapper, .cta-section {
-        padding: 80px 30px;
-    }
-
-    .problem-stats { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+    .problem-statement h2 { font-size: 32px; margin-bottom: 40px; }
+    .problem-statement h3 { font-size: 28px; }
+    .problem-stats { grid-template-columns: 1fr; gap: 30px; }
+    .stat-item { min-height: auto; padding-bottom: 20px; }
     .stat-item p { font-size: 16px; }
 
-    .upload-promo-section { flex-direction: column; align-items: center; }
+    .upload-promo-section { padding: 60px 30px; flex-direction: column; align-items: center; }
     .promo-text, .upload-area { width: 100%; max-width: 600px; }
-    .promo-text h2 { font-size: 36px; }
-    .promo-text .subtitle { font-size: 20px; }
-    .promo-text h3 { font-size: 30px; }
-    .benefit-item-list p { font-size: 20px; }
-    .upload-area p { font-size: 30px; }
-    .upload-area .small-text { font-size: 20px; }
+    .promo-text h2 { font-size: 32px; }
+    .promo-text .subtitle { font-size: 18px; }
+    .promo-text h3 { font-size: 28px; margin-bottom: 20px; }
+    .benefit-item-list { flex-direction: row; text-align: left; gap: 12px; align-items: center; } /* Keep as row if space allows */
+    .benefit-item-list img { margin-bottom: 0; }
+    .benefit-item-list p { font-size: 18px; }
+    .upload-area p { font-size: 28px; }
+    .upload-area .small-text { font-size: 18px; }
 
-    .features-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+    .features-overview { padding: 60px 30px; }
+    .features-grid { grid-template-columns: 1fr; margin-bottom: 40px; }
+    .info-block { min-height: auto; padding-bottom: 20px; }
     .info-block p { font-size: 20px; }
-    .large-cta-button { width: 100%; max-width: 500px; }
+    .large-cta-button { width: 100%; max-width: 350px; }
 
-    .benefits-section { grid-template-columns: 1fr; }
-    .benefit-item p { font-size: 28px; }
+    .benefits-section { padding: 60px 30px; grid-template-columns: 1fr; }
+    .benefit-item { padding: 15px 20px; min-height: auto; }
+    .benefit-item p { font-size: 26px; text-align: center; }
 
-    .timeline-wrapper { display: none; }
-    .mobile-roadmap-wrapper { display: block; }
-    .product-roadmap h2 { font-size: 36px; margin-bottom: 50px; }
-
-    .mobile-roadmap-item { margin-bottom: 25px; }
-    .mobile-roadmap-header h4 { font-size: 28px; }
+    .product-roadmap { padding: 60px 30px; }
+    .product-roadmap h2 { font-size: 32px; margin-bottom: 60px; }
+    .timeline-wrapper { display: none; } /* Hide desktop timeline */
+    .mobile-roadmap-wrapper { display: block; } /* Show mobile timeline */
+    .mobile-roadmap-header h4 { font-size: 24px; }
     .mobile-roadmap-details p { font-size: 15px; }
 
 
+    .testimonials-section { padding: 60px 30px; }
+    .testimonials-section h2 { font-size: 32px; margin-bottom: 40px; }
     .testimonial-grid { grid-template-columns: 1fr; }
-    .testimonials-section h2 { font-size: 36px; margin-bottom: 50px; }
+    .testimonial-item { padding: 20px; }
+    .author-info { justify-content: center; }
+    .author, .role { text-align: center; }
 
+
+    .faq-section-wrapper { padding: 60px 30px; }
     .faq-container { flex-direction: column; align-items: center; }
     .faq-image-placeholder, .faq-content { width: 100%; max-width: 600px; }
-    .faq-content h2 { font-size: 28px; margin-bottom: 25px; }
-    .faq-question { font-size: 15px; }
+    .faq-content h2 { font-size: 28px; margin-bottom: 20px; }
+    .faq-question { font-size: 16px; }
     .faq-answer p { font-size: 14px; }
 
-    .cta-content { padding: 60px; }
-    .cta-content h2 { font-size: 40px; }
-    .cta-content p { font-size: 20px; }
-    .cta-button { width: 320px; height: 55px; font-size: 18px; }
+    .cta-section { padding: 60px 30px; }
+    .cta-content { padding: 50px 30px; }
+    .cta-content h2 { font-size: 32px; }
+    .cta-content p { font-size: 18px; }
+    .cta-button { width: 100%; max-width: 350px; height: 55px; font-size: 18px; }
 
-    /* FOOTER for vertical Tablets */
+    /* FOOTER for Tablets */
     .main-footer { padding: 50px 30px; }
     .footer-container {
         flex-direction: column;
@@ -1058,13 +997,15 @@ body {
         gap: 30px;
     }
     .footer-links-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
         width: 100%;
         justify-items: center;
         text-align: center;
         order: 0;
+        gap: 20px;
     }
+    .footer-column h3 { font-size: 16px; margin-bottom: 10px; }
+    .footer-column ul li a { font-size: 13px; }
     .social-links {
         order: 1;
         margin-left: 0;
@@ -1072,12 +1013,11 @@ body {
         text-align: center;
     }
     .social-links h3 { text-align: center; }
-    .social-links ul {
-        justify-content: center;
-    }
+    .social-links ul { justify-content: center; }
+
     .footer-logo-info {
+        align-items: center;
         text-align: center;
-        flex-basis: auto;
         order: 2;
     }
 }
@@ -1093,6 +1033,13 @@ body {
     .main-header .logo .your-logo-here { width: 60px; height: 60px; }
 
     /* Mobile Navigation */
+    .menu-toggle {
+        display: flex; /* Always show burger menu for mobile */
+        margin-left: 20px;
+    }
+    .hamburger-line {
+        background-color: var(--primary-text-color);
+    }
     .main-nav {
         position: fixed;
         top: 0;
@@ -1119,11 +1066,6 @@ body {
     }
     .main-nav ul li { width: 100%; }
     .main-nav a { font-size: 20px; }
-    .menu-toggle {
-        display: block;
-        margin-left: 20px;
-        color: var(--primary-text-color); /* Adjusted for better visibility */
-    }
     .main-header .scan-cv-btn { display: none; }
     .main-nav-overlay {
         position: fixed;
