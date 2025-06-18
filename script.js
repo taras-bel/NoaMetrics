@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const navLinks = document.querySelectorAll('.main-nav a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
+                // Check if the menu is active before closing
                 if (mainNav.classList.contains('active')) {
                     mainNav.classList.remove('active');
                     mainNavOverlay.classList.remove('active');
@@ -165,19 +166,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Roadmap Dot Interaction (Desktop & Tablet)
     const timelineItems = document.querySelectorAll('.timeline-item');
     timelineItems.forEach(item => {
-        const circle = item.querySelector('.circle');
-        const paragraph = item.querySelector('p');
+        // Updated: Click on the entire item or just the circle to toggle active state
+        item.addEventListener('click', function() {
+            const isActive = this.classList.contains('active');
 
-        if (circle && paragraph) {
-            circle.addEventListener('click', function() {
-                timelineItems.forEach(i => {
-                    if (i !== item) {
-                        i.classList.remove('active');
-                    }
-                });
-                item.classList.toggle('active');
+            // Close all other active items
+            timelineItems.forEach(i => {
+                if (i !== this && i.classList.contains('active')) {
+                    i.classList.remove('active');
+                }
             });
-        }
+
+            // Toggle active state for the clicked item
+            this.classList.toggle('active', !isActive);
+        });
     });
 
 
