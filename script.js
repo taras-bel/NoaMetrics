@@ -17,16 +17,16 @@ const loadComponent = async (url, placeholderId) => {
     }
 };
 
-// Load header and footer components
+// Загрузка компонентов header и footer при загрузке DOM
 document.addEventListener('DOMContentLoaded', async function() {
+    // Ждем загрузки хедера и футера перед инициализацией остального JS
     await Promise.all([
         loadComponent('header.html', 'header-placeholder'),
         loadComponent('footer.html', 'footer-placeholder')
     ]);
 
     // ===========================================
-    // ВЕСЬ ОСТАЛЬНОЙ КОД, КОТОРЫЙ У ВАС УЖЕ БЫЛ
-    // И НОВЫЕ ИСПРАВЛЕНИЯ
+    // ВЕСЬ ОСТАЛЬНОЙ КОД
     // ===========================================
 
     // Navigation Menu Toggle (Hamburger menu for mobile and specific tablets)
@@ -38,30 +38,28 @@ document.addEventListener('DOMContentLoaded', async function() {
         menuToggle.addEventListener('click', function() {
             mainNav.classList.toggle('active');
             mainNavOverlay.classList.toggle('active');
-            document.body.classList.toggle('no-scroll');
+            document.body.classList.toggle('no-scroll'); // Предотвращает скролл фона
         });
 
-        // Close menu when clicking on the overlay
+        // Закрытие меню при клике на оверлей
         mainNavOverlay.addEventListener('click', function() {
             mainNav.classList.remove('active');
             mainNavOverlay.classList.remove('active');
             document.body.classList.remove('no-scroll');
         });
 
-        // NEW: Close menu when clicking anywhere outside the menu
+        // Закрытие меню при клике вне меню и кнопки-гамбургера
         document.addEventListener('click', function(event) {
             if (mainNav.classList.contains('active') &&
                 !menuToggle.contains(event.target) &&
-                !mainNav.contains(event.target) &&
-                !mainNavOverlay.contains(event.target)) {
+                !mainNav.contains(event.target)) { // Убрал mainNavOverlay.contains(event.target) т.к. оверлей сам закрывает меню
                 mainNav.classList.remove('active');
                 mainNavOverlay.classList.remove('active');
                 document.body.classList.remove('no-scroll');
             }
         });
 
-
-        // Close mobile menu when a nav link is clicked
+        // Закрытие мобильного меню при клике на ссылку
         const navLinks = document.querySelectorAll('.main-nav a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -74,17 +72,19 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-
     // Smooth Scrolling for Navigation Links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
 
             const targetId = this.getAttribute('href');
-            if (targetId.length > 1) {
+            if (targetId.length > 1) { // Убедимся, что это не просто #
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
-                    const headerOffset = document.querySelector('.main-header') ? document.querySelector('.main-header').offsetHeight : 0;
+                    // Используем getComputedStyle для получения реального значения height, включая padding и border
+                    const header = document.querySelector('.main-header');
+                    const headerOffset = header ? parseFloat(getComputedStyle(header).height) : 0; // Получаем высоту как число
+
                     const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
                     const offsetPosition = elementPosition - headerOffset;
 
@@ -96,7 +96,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         });
     });
-
 
     // Upload Area Drag & Drop and File Handling
     const uploadArea = document.getElementById('uploadArea');
@@ -110,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (uploadArea && uploadButton && fileInput && fileList && uploadProgressBarContainer && uploadProgressBar && uploadStatusText) {
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             uploadArea.addEventListener(eventName, preventDefaults, false);
-            document.body.addEventListener(eventName, preventDefaults, false);
+            // document.body.addEventListener(eventName, preventDefaults, false); // Убрано, чтобы не перехватывать глобально
         });
 
         ['dragenter', 'dragover'].forEach(eventName => {
@@ -132,52 +131,118 @@ document.addEventListener('DOMContentLoaded', async function() {
             e.stopPropagation();
         }
 
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            handleFiles(files);
-        }
+        async function handleFiles(files) {
+            fileList.innerHTML = ''; // Очищаем список файлов перед новой загрузкой
+            if (files.length === 0) { // Если файлов нет (например, пользователь отменил выбор)
+                uploadProgressBarContainer.style.display = 'none';
+                uploadStatusText.style.display = 'none';
+                return;
+            }
 
-        function handleFiles(files) {
-            fileList.innerHTML = '';
-            if (files.length > 0) {
-                uploadProgressBarContainer.style.display = 'block';
-                uploadStatusText.style.display = 'block';
-                uploadStatusText.textContent = 'Uploading... 0%';
-                uploadProgressBar.style.width = '0%';
-                uploadProgressBar.setAttribute('aria-valuenow', '0');
+            uploadProgressBarContainer.style.display = 'block';
+            uploadStatusText.style.display = 'block';
+            uploadStatusText.textContent = 'Preparing files...';
+            uploadProgressBar.style.width = '0%';
+            uploadProgressBar.setAttribute('aria-valuenow', '0');
 
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
+            const formData = new FormData();
+            let validFilesCount = 0;
+            const allowedFileTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']; // MIME types for PDF and DOCX
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (allowedFileTypes.includes(file.type)) {
+                    formData.append('files[]', file);
                     const listItem = document.createElement('div');
                     listItem.textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
                     fileList.appendChild(listItem);
+                    validFilesCount++;
+                } else {
+                    const listItem = document.createElement('div');
+                    listItem.textContent = `Rejected: ${file.name} (Invalid file type. Only PDF and DOCX.)`;
+                    listItem.style.color = 'red';
+                    fileList.appendChild(listItem);
+                }
+            }
+
+            if (validFilesCount === 0) {
+                uploadStatusText.textContent = 'No valid files selected. Only PDF and DOCX are allowed.';
+                uploadProgressBarContainer.style.display = 'none';
+                setTimeout(() => {
+                    uploadStatusText.style.display = 'none';
+                    fileList.innerHTML = '';
+                }, 3000);
+                return;
+            }
+
+            uploadStatusText.textContent = 'Uploading... 0%';
+
+            try {
+                const response = await fetch('/api/upload_cv.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += 10;
-                    uploadProgressBar.style.width = `${progress}%`;
-                    uploadProgressBar.setAttribute('aria-valuenow', progress.toString());
-                    uploadStatusText.textContent = `Uploading... ${progress}%`;
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        uploadStatusText.textContent = 'Upload Complete!';
-                        setTimeout(() => {
-                            uploadProgressBarContainer.style.display = 'none';
-                            uploadStatusText.style.display = 'none';
-                            fileList.innerHTML = '';
-                        }, 2000);
-                    }
-                }, 200);
+                const result = await response.json();
+
+                if (result.success) {
+                    // Simulate progress bar filling up after successful upload
+                    let progress = 0;
+                    const fillProgress = setInterval(() => {
+                        progress += 20; // Fast fill
+                        if (progress >= 100) {
+                            progress = 100;
+                            clearInterval(fillProgress);
+                        }
+                        uploadProgressBar.style.width = `${progress}%`;
+                        uploadProgressBar.setAttribute('aria-valuenow', progress.toString());
+                        uploadStatusText.textContent = `Upload Complete! ${progress}%`;
+
+                        if (progress === 100) {
+                            setTimeout(() => {
+                                uploadStatusText.textContent = 'Upload Successful!';
+                                setTimeout(() => { // Hide after a small delay
+                                    uploadProgressBarContainer.style.display = 'none';
+                                    uploadStatusText.style.display = 'none';
+                                    fileList.innerHTML = '';
+                                }, 2000);
+                            }, 500); // Give user a moment to see 100%
+                        }
+                    }, 100);
+
+                    console.log('Upload successful:', result);
+                    // alert('Files uploaded successfully!'); // Можно убрать, если прогресс-бар достаточен
+                } else {
+                    alert('Upload failed: ' + result.message);
+                    console.error('Upload failed:', result);
+                    uploadStatusText.textContent = 'Upload failed!';
+                    uploadProgressBar.style.width = '0%'; // Reset bar on failure
+                    setTimeout(() => {
+                        uploadProgressBarContainer.style.display = 'none';
+                        uploadStatusText.style.display = 'none';
+                        fileList.innerHTML = '';
+                    }, 3000);
+                }
+            } catch (error) {
+                console.error('Error during upload:', error);
+                alert('An error occurred during upload. Please try again.');
+                uploadStatusText.textContent = 'Upload error!';
+                uploadProgressBar.style.width = '0%'; // Reset bar on error
+                setTimeout(() => {
+                    uploadProgressBarContainer.style.display = 'none';
+                    uploadStatusText.style.display = 'none';
+                    fileList.innerHTML = '';
+                }, 3000);
             }
         }
     }
 
 
     // Roadmap Accordion (Desktop & Tablet) - Unified Logic for Desktop & Mobile
-    // This logic now supports both desktop (via media query CSS for timeline-wrapper display)
-    // and mobile for the actual accordion behavior.
     const allRoadmapItems = document.querySelectorAll('.timeline-item, .mobile-roadmap-item');
 
     allRoadmapItems.forEach(item => {
@@ -208,7 +273,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                 // Toggle active state for the clicked item
                 if (!isActive) {
                     item.classList.add('active');
-                    detail.style.maxHeight = detail.scrollHeight + "px";
+                    // Устанавливаем maxHeight с небольшим запасом, чтобы предотвратить скрытие текста
+                    detail.style.maxHeight = detail.scrollHeight + 50 + "px"; // Добавляем запас
                     detail.style.opacity = '1';
                     circle.classList.add('point-active'); // For mobile, also applies to desktop for consistency
                 } else {
@@ -221,16 +287,14 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             // Initial state: If an item has the 'active' class on load (e.g., 'Now'), open it
             if (item.classList.contains('active')) {
-                // For desktop, we want this to be open by default
-                // For mobile, this also ensures 'Now' is open if the class is applied via HTML
-                detail.style.maxHeight = detail.scrollHeight + "px";
+                // Устанавливаем maxHeight с небольшим запасом, чтобы предотвратить скрытие текста
+                detail.style.maxHeight = detail.scrollHeight + 50 + "px"; // Добавляем запас
                 detail.style.opacity = '1';
                 circle.classList.add('point-active');
             } else {
                 detail.style.maxHeight = null;
                 detail.style.opacity = '0';
             }
-
 
             // Add event listeners to both the header (for accessibility/text click)
             // and the circle (for visual click target)
@@ -278,7 +342,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (!roadmapSection) return;
 
         const triggerBottom = window.innerHeight * 0.8;
-        const allRevealedItems = document.querySelectorAll('.timeline-item, .mobile-roadmap-item'); // Changed variable name
+        const allRevealedItems = document.querySelectorAll('.timeline-item, .mobile-roadmap-item');
         allRevealedItems.forEach(item => {
             const itemTop = item.getBoundingClientRect().top;
             if (itemTop < triggerBottom) {
@@ -286,21 +350,27 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         });
 
+        // Activate desktop timeline animation
         if (desktopTimelineWrapper) {
             const timelineTop = desktopTimelineWrapper.getBoundingClientRect().top;
-            if (timelineTop < triggerBottom && !desktopTimelineWrapper.classList.contains('animated')) {
+            // Get the computed display style for the element
+            const displayStyle = window.getComputedStyle(desktopTimelineWrapper).display;
+            if (displayStyle !== 'none' && timelineTop < triggerBottom && !desktopTimelineWrapper.classList.contains('animated')) {
                 desktopTimelineWrapper.classList.add('animated');
             }
         }
 
+        // Activate mobile roadmap animation
         if (mobileRoadmapWrapper) {
             const mobileRoadmapTop = mobileRoadmapWrapper.getBoundingClientRect().top;
-            if (mobileRoadmapTop < triggerBottom && !mobileRoadmapWrapper.classList.contains('animated')) {
+            const displayStyle = window.getComputedStyle(mobileRoadmapWrapper).display;
+            if (displayStyle !== 'none' && mobileRoadmapTop < triggerBottom && !mobileRoadmapWrapper.classList.contains('animated')) {
                 mobileRoadmapWrapper.classList.add('animated');
             }
         }
     }
 
+    // Initial check and event listeners
     checkRoadmapVisibility();
     window.addEventListener('scroll', checkRoadmapVisibility);
     window.addEventListener('resize', checkRoadmapVisibility);
@@ -309,14 +379,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Modal functionality
     const modal = document.getElementById('betaFormModal');
     const closeModalBtn = document.querySelector('.modal .close-button');
+    const betaForm = document.getElementById('betaForm'); // Получаем элемент формы
 
-    // Use event delegation for modal open buttons, as they might be loaded dynamically
+    // Используем делегирование событий для кнопок открытия модального окна
     document.body.addEventListener('click', function(event) {
         if (event.target.matches('.open-beta-modal')) {
             event.preventDefault();
             if (modal) {
                 modal.style.display = 'flex';
-                const firstFocusableElement = modal.querySelector('input, button, [tabindex="0"]');
+                // Фокусируемся на первом интерактивном элементе в модальном окне
+                const firstFocusableElement = modal.querySelector('input, button, [tabindex]:not([tabindex="-1"])');
                 if (firstFocusableElement) {
                     firstFocusableElement.focus();
                 }
@@ -331,19 +403,21 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
         }
         window.addEventListener('click', (event) => {
-            if (event.target === modal) {
+            if (event.target === modal) { // Закрыть, если клик вне содержимого модала
                 modal.style.display = 'none';
             }
         });
 
-        // Trap focus within the modal for accessibility
+        // Ловушка фокуса внутри модального окна для доступности
         modal.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 modal.style.display = 'none';
             }
 
             if (modal.style.display === 'flex' && e.key === 'Tab') {
-                const focusableElements = modal.querySelectorAll('a[href], button, input, textarea, select, [tabindex]:not([tabindex="-1"])');
+                const focusableElements = Array.from(modal.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'));
+                if (focusableElements.length === 0) return; // Если нет фокусируемых элементов
+
                 const firstFocusableElement = focusableElements[0];
                 const lastFocusableElement = focusableElements[focusableElements.length - 1];
 
@@ -357,8 +431,68 @@ document.addEventListener('DOMContentLoaded', async function() {
                         firstFocusableElement.focus();
                         e.preventDefault();
                     }
-                    }
+                }
             }
         });
+
+        // Обработка отправки формы Beta (интеграция с PHP бэкендом)
+        if (betaForm) {
+            betaForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const notifications = document.getElementById('notifications').checked;
+
+                if (!name || !email) {
+                    alert('Please fill in all required fields (Name and Email).');
+                    return;
+                }
+
+                // Basic email validation
+                if (!/\S+@\S+\.\S+/.test(email)) {
+                    alert('Please enter a valid email address.');
+                    return;
+                }
+
+                const formData = {
+                    name: name,
+                    email: email,
+                    notifications: notifications
+                };
+
+                // Добавляем простую индикацию загрузки
+                const submitButton = betaForm.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.textContent;
+                submitButton.textContent = 'Submitting...';
+                submitButton.disabled = true;
+
+                try {
+                    const response = await fetch('/api/submit_beta.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert('Success: ' + result.message);
+                        modal.style.display = 'none';
+                        betaForm.reset(); // Очищаем форму
+                    } else {
+                        alert('Error: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error submitting beta form:', error);
+                    alert('An error occurred while submitting. Please try again.');
+                } finally {
+                    submitButton.textContent = originalButtonText;
+                    submitButton.disabled = false;
+                }
+            });
+        }
     }
 });
