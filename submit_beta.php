@@ -11,10 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 // Database credentials
-define('DB_HOST', db5018088022.hosting-data.io); // e.g., 'localhost' or 'db.ionos.com'
-define('DB_USER', dbu3872171);
-define('DB_PASS', as;daskdjka@#$22323);
-define('DB_NAME', dbs14363591);
+define('DB_HOST', 'db5018088022.hosting-data.io'); // e.g., 'localhost' or 'db.ionos.com'
+define('DB_USER', 'dbu3872171');
+define('DB_PASS', 'as;daskdjka@#$22323');
+define('DB_NAME', 'dbs14363591');
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
